@@ -1,0 +1,32 @@
+
+/*
+* STAR RATTINGS TEMPLATES:
+* 
+Ratings Vote Text:
+<h3 class="text-center rating_title ">%RATINGS_AVERAGE%</h3>
+<div class="rating_bulb">%RATINGS_IMAGES_VOTE%</div>
+<div> %RATINGS_TEXT%</div>
+
+Ratings Voted Text:
+<h3 class="text-center rating_title ">%RATINGS_AVERAGE%</h3>
+<div class="rating_bulb">%RATINGS_IMAGES_VOTE%</div>
+<div> %RATINGS_TEXT%</div>
+
+Ratings No Permission Text:
+<h3 class="text-center rating_title ">%RATINGS_AVERAGE%</h3>
+<div class="rating_bulb">%RATINGS_IMAGES%</div>
+<div>%RATINGS_TEXT%</div>
+<em>You need to be a registered member to rate this.</em>
+
+Ratings None:
+<h3 class="text-center rating_title ">No ratting yet</h3>
+<div class="rating_bulb">%RATINGS_IMAGES_VOTE%</div>
+<div>%RATINGS_TEXT%</div>
+
+Highest Rated:
+<li><a href="%POST_URL%" title="%POST_TITLE%">%POST_TITLE%</a> %RATINGS_IMAGES% (%RATINGS_AVERAGE% out of %RATINGS_MAX%)</li>
+
+Most Rated:
+<li><a href="%POST_URL%" title="%POST_TITLE%">%POST_TITLE%</a> - %RATINGS_USERS% votes</li>
+
+*/

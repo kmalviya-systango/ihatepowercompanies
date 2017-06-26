@@ -1,0 +1,107 @@
+/* CSS Document */
+
+@media screen and (max-width:1199px){
+	.social_button{ text-align:center;}
+	.social_button li a{ margin:0px 3px 10px;}
+	.theme_btn{ font-size:16px;}
+	.submit_review, .submit_review:focus, .submit_review:hover{ background-position: 53px center !important;}
+	.business, .business:hover, .business:focus{background-position: 65px center !important;}
+}
+
+@media screen and (max-width:991px){
+	.business_sol .row .col-md-4 { padding: 0px 6px;}
+	.business_plans ul{font-size: 13px;}
+	.business_plans h2{font-size: 26px;}
+	.business_plans h5{font-size: 18px;}
+	.business_plans .site_btn{ min-width: 180px; font-size: 13px !important; height: 33px !important; padding: 5px 10px;}
+	.pr-none-sm{ padding-right:0px !important;}
+	.top_header.navbar-fixed-top.sticky-header.fixed .navbar-header { margin-top: 24px; padding-bottom: 4px;}
+	.top_header .navbar-nav > li > a{padding:7px 10px; font-size: 13px;}
+	.top_header .navbar-nav > li.top_submit_review a{ margin-left: 10px; margin-right: 10px;}
+	.testimonial_slider .carousel-inner{width: 80%; margin:0px auto;}
+	.testimonial_slider .carousel-inner .item p{ font-size:16px;}
+	.testimonial_slider .carousel-inner .item .client small { font-size: 14px;}
+	.testimonial_slider .carousel-inner .item br, .business_product p br, .terms.text-center br{ display:none;}
+	.business_product p{ font-size: 18px;}
+	.business_plans ul{ margin-bottom:25px;}	
+	.business_plans{padding-bottom: 35px;}
+	
+	.login_signup{ width:550px; max-width:100%; float: none; margin: 0 auto;}
+	.social_button li a{ width:210px;}	
+	.pt-20-sm{ padding-top:20px !important;}
+	.cust_view{ width:50%; float:left;}
+	.customer_list_footer { margin:20px 0px;}
+	.customer_list_footer li { width:14%;}
+	.customer_list_footer li:last-child{ width:30%;}
+	.navbar{ margin-bottom:20px;}
+	.banner h1{font-size: 40px;}
+	.banner h3 br{ display:none;}
+	.theme_btn, .theme_btn:hover, .theme_btn:focus { background-size: 22px auto !important; font-size: 14px;}
+	.explore_review, .explore_review:hover, .explore_review:focus{background-position: 4px center !important;}
+	.submit_review, .submit_review:focus, .submit_review:hover{ background-position: 35px center !important;}
+	.business, .business:hover, .business:focus{background-position: 48px center !important;}
+	.inline-block-sm{ display:inline-block !important;}
+	.text-center-sm{ text-align:center !important;}
+	.pad-lft-none-sm{ padding-left:0px !important;}
+	.pad-rgt-none-sm{ padding-right:0px !important;}
+	.footer_social_section{ margin-top:-20px;}
+}
+@media screen and (max-width:767px){
+	.navbar-toggle{background-color: #e2001a; border: 1px solid #e2001a; margin-top: 20px;}
+	.navbar-toggle .icon-bar{background: #ffffff;}
+	.top_header .col-xs-12{ padding:0px;}
+	#myNavbar .navbar-nav, #myNavbar{ width:100%; padding:0px; margin:0px; }
+	.top_header .top_login::after{ display:none;}
+	#myNavbar .navbar-nav{ margin-top:20px;}
+	.top_header #myNavbar .navbar-nav > li > a{ padding: 7px 15px; margin-top: 12px; font-size: 15px;}
+	.top_header #myNavbar{max-height: inherit !important;}
+	.active.top_submit_review > a { display: inline-block; width: auto !important;}
+	.business_plans h2{font-size: 30px;}
+	.business_plans h5 { font-size: 20px;}
+	.business_plans ul { font-size: 16px;}
+	.business_sol .row .col-md-4 { padding:0px 15px;}
+	.business_plans .site_btn { font-size: 16px !important; height: 36px !important; min-width: 222px; padding: 5px 17px;}
+	.testimonial_slider .carousel-inner{ width:70%;}
+	.carousel.slide .carousel-control{width: 45px !important; height: 45px; padding: 4px 0;}
+	.carousel.slide .carousel-control img{ width:11px;}
+	#our_plan .modal-dialog .modal-content .modal-header, #filter_review .modal-dialog .modal-content .modal-header,  #location .modal-dialog .modal-content .modal-header,  #company .modal-dialog .modal-content .modal-header,
+	#our_plan .modal-dialog .modal-content .modal-footer, #filter_review .modal-dialog .modal-content .modal-footer, #location .modal-dialog .modal-content .modal-footer, #company .modal-dialog .modal-content .modal-footer{ padding:25px;}
+	#our_plan .modal-dialog, #filter_review .modal-dialog, #location .modal-dialog, #company .modal-dialog{ margin:10px auto;}
+	#our_plan .modal-dialog .modal-content .modal-body{ padding:10px 10px 30px;}
+	#filter_review .modal-dialog .modal-content .modal-body, #location .modal-dialog .modal-content .modal-body, #company .modal-dialog .modal-content .modal-body{ padding:10px 25px 30px;}
+	.tag_box{padding: 4px 7px 0; font-size: 13px;}
+	.signup_block{ padding:22px 0px;}
+	.signup_block .site_btn{ margin-left:10px; width:119px;}
+	.register_in .site_btn{ width:119px;}
+	.green_check{ width:50%; min-height:41px;}
+	.green_check input[type="checkbox"]:not(old) + label{ font-size:14px;}
+	.sorting{ padding:0px;}
+	.sorting .col-sm-3{border-bottom: 1px solid #cccccc; padding: 12px 15px;}
+	.sorting div:nth-child(3){border-bottom: none;}
+	.customer_list_footer{ margin-bottom:0px;}
+	.customer_list_footer li{ width:20%; font-size:12px;}
+	.customer_list_footer li span{ font-size:19px;}
+	.customer_list_footer li:last-child{ width:100%; padding-left: 0px; padding-top: 25px;}
+	.cust_view{ width:100%;}
+	.navbar.home ul{ background:#ddd;}
+	.search-for-car{ padding: 8px !important; height: auto;}
+	.search-for-car .inner-search { width: 100% !important; height: auto; background:transparent;}
+	.search-for-car .separator::before, .banner h1 br{ display:none;}
+	.inner-search .col-lg-4{ margin-bottom:8px; background:#fff;}
+	.inner-search .col-lg-4 input{ background:transparent;}
+	.search-for-car .inner-search-button{ background-position: center center; position: static; width: 100%;}
+	.search-box{ padding:0px 15px; margin: 35px auto 24px; width: 480px; max-width:100%;}
+	.banner h1 { font-size: 32px;}
+	.top_header.navbar-fixed-top.sticky-header{ z-index:99999;}
+	.theme_btn, .theme_btn:hover, .theme_btn:focus{ background-size: auto auto !important; font-size: 18px; margin: 0 auto 10px; width: 310px; max-width:100%;}
+	.submit_review, .submit_review:focus, .submit_review:hover { background-position: 60px center !important;}
+	.explore_review, .explore_review:hover, .explore_review:focus { background-position: 20px center !important;}
+	.business, .business:hover, .business:focus { background-position: 72px center !important;}
+	.pad-lft-none-xs{ padding-left:0px !important;}
+	.pad-rgt-none-xs{ padding-right:0px !important;}
+	.main-content .thumbnail .read_more{ margin: 0 auto; width: 180px; max-width:100%;}
+	.main-content .thumbnail{margin: 0 auto 20px; width: 263px; max-width:100%;}
+	.ipccf_footer h1{ font-size:29px;}
+	.footer-sitemap ul{ margin-bottom:40px;}
+	.newsletter_footer { margin-top: 30px;}
+}
