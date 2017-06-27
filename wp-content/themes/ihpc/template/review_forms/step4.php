@@ -179,7 +179,8 @@
       <div class="row mt-30 liked-box">
         <div class="col-md-6">
           <div class="input-group ">
-            <input type="text" class="form-control" name="experience[likes]" placeholder="I liked" id="liekd">
+            <input type="text" class="form-control" placeholder="I liked" id="liekd">
+            <input type="hidden" name="experience[likes]">
             <span class="input-group-btn">
             <button type="button" class="btn form-btn remove-btn" id="addLiked">Add</button>
             </span> </div>
@@ -189,6 +190,7 @@
         <div class="col-md-6">
           <div class="input-group">
             <input type="text" class="form-control" name="experience[unlikes]" placeholder="I did not like" id="unliekd">
+            <input type="hidden" name="experience[unlikes]">
             <span class="input-group-btn">
             <button type="button" class="btn form-btn remove-btn" id="addunLiked">Add</button>
             </span> </div>
@@ -218,7 +220,8 @@
         <div class="row mt-30 liked-box">
           <div class="col-md-6">
             <div class="input-group">
-              <input type="text" class="form-control" name="companies_consider" placeholder="I liked" id="wliekd">
+              <input type="text" class="form-control" placeholder="I liked" id="wliekd">
+              <input type="hidden" name="companies_consider">
               <span class="input-group-btn">
               <button type="button" class="btn form-btn remove-btn" id="addwLiked">Add</button>
               </span> </div>
