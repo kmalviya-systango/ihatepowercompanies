@@ -67,7 +67,7 @@
 <div style="display:none" id="ajax_loader"><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/images/loader.gif"></div>
 <?php wp_footer(); ?>
 
-<?php if(is_front_page()): ?>
+<?php if(is_home()): ?>
 <script type="text/javascript">
 jQuery(window).scroll(function(){
   if (jQuery(window).scrollTop() >= 50) {

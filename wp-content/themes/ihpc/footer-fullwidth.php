@@ -68,6 +68,7 @@
 		</div>
 <?php wp_footer(); ?>
 
+<?php if(is_home()): ?>
 <script type="text/javascript">
 jQuery(window).scroll(function(){
   if (jQuery(window).scrollTop() >= 50) {
@@ -78,5 +79,7 @@ jQuery(window).scroll(function(){
    }
 });
 </script>
+<?php endif; ?>
+
 </body>
 </html>
