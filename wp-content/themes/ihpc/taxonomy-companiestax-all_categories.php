@@ -7,8 +7,8 @@ $categories = get_ihpc_categories('companiestax',0);
 <div class="row">
 	<div class="col-sm-8"><h1>All Categories</h1></div>
 	<div class="col-sm-4">
-		<a href="?tab=by_alphabate"  class="btn btn-bycat pull-right">By Alphabate</a>
-		<a href="?tab=by_category" class="btn btn-bycat active mr-15 pull-right">By Category</a>
+		<a href="?tab=by_alphabate"  class="btn btn-bycat <?php if($_GET['tab'] == 'by_alphabate') echo 'active'; ?> pull-right">By Alphabate</a>
+		<a href="?tab=by_category" class="btn btn-bycat <?php if($_GET['tab'] == 'by_category') echo 'active'; ?> mr-15 pull-right">By Category</a>
 	</div>
 			
 	<?php 
