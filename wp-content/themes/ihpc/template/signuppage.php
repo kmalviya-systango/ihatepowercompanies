@@ -107,16 +107,16 @@ if( !empty($_GET['success_msg']) ){
 			<span>OR</span>
 		</div>
 		
-		<form action="" method="post">
+		<form action="" method="post" autocomplete="off" id="sign-up-user">
 			<div class="register_in">
 				<div class="form-group">
 					<label>Username<span class="mandatory">*</span></label>
-					<input required="required" type="text" name="user_name" class="form-control">
+					<input type="text" name="user_name" class="form-control" required>
 				</div>
 				
 				<div class="form-group mt-20">
 					<label>Email<span class="mandatory">*</span></label>
-					<input required="required" type="email" name="user_email" class="form-control">
+					<input type="email" name="user_email" class="form-control" required>
 				</div>
 				
 				<div class="form-group mt-20">
@@ -182,3 +182,7 @@ if( !empty($_GET['success_msg']) ){
 </div>
 <!-- main-content -->
 <?php get_footer('fullwidth');?>
+
+<script>
+	alert("IHPC");
+</script>

@@ -67,6 +67,7 @@ if( isset($_POST['submit_type']) && ($_POST['submit_type'] == 'login') ){
 		</div>
 		<ul class="social_button">
 			<li class="facebook"><a href="#x"><i class="fa fa-facebook" aria-hidden="true"></i>Facebook</a></li>
+
 			<li class="twitter"><a href="#x"><i class="fa fa-twitter" aria-hidden="true"></i>Twitter</a></li>
 			<li class="google_plus"><a href="#x"><i class="fa fa-google-plus" aria-hidden="true"></i>Google</a></li>
 		</ul>
@@ -74,7 +75,7 @@ if( isset($_POST['submit_type']) && ($_POST['submit_type'] == 'login') ){
 			<span>OR</span>
 		</div>	
 
-		<form action="" method="post">
+		<form action="" method="post" autocomplete="off" id="user-login">
 			<div class="register_in">
 				<div class="form-group">
 					<label>Email Address or Username<span class="mandatory">*</span></label>
@@ -111,3 +112,48 @@ if( isset($_POST['submit_type']) && ($_POST['submit_type'] == 'login') ){
 </div>
 
 <?php get_footer('fullwidth');?>
+<script type="text/javascript">
+
+/*jquery validate*/
+ $('#user-login').validate({
+        rules: {
+		 user_login:  {
+			  required: true
+			},			
+           user_password:  {
+			  required: true
+			}
+        },
+        messages: {
+            user_login: "Enter Email or Username",
+            user_password: "Enter your password"
+           },
+		    onfocusout: function (element, event) {
+            if (element.name !== "review_title") {
+                $.validator.defaults.onfocusout.call(this, element, event);
+            }
+        },
+		   		
+        highlight: function(element) {
+            $(element).closest('.form-group').addClass('has-error');
+            $(element).closest('.form-group').removeClass('has-success');
+        },
+        unhighlight: function(element) {
+            $(element).closest('.form-group').removeClass('has-error');
+            $(element).closest('.form-group').addClass('has-success');
+        },
+        errorElement: 'span',
+        errorClass: 'help-block small',
+        errorPlacement: function(error, element) {
+            if(element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+	
+
+/*jquery validate*/
+
+</script>

@@ -13,15 +13,15 @@
         <p class="offset-bottom-primary hint">This information will be available only to the company and will not be publicly shared.</p>
         <div class="form-group">
           <label for="ComplaintForm_full_name">Full Name</label>
-          <input class="form-control" name="ComplaintForm[full_name]" id="ComplaintForm_full_name" type="text" maxlength="255">
+          <input class="form-control" name="ComplaintForm[full_name]" id="ComplaintForm_full_name" type="text" maxlength="255" required>
         </div>
         <div class="form-group">
           <label for="ComplaintForm_personal_email">Your Email</label>
-          <input class="form-control" data-rule-required="true" data-rule-email="true" data-msg-required="Please enter your email address" data-msg-email="Please enter a valid email address" name="ComplaintForm[personal_email]" id="ComplaintForm_personal_email" type="email" maxlength="100">
+          <input class="form-control" name="ComplaintForm[personal_email]" id="ComplaintForm_personal_email" type="email" maxlength="100" required>
         </div>
         <div class="form-group mb0px">
           <label for="ComplaintForm_personal_phone">Personal Phone</label>
-          <input class="form-control" name="ComplaintForm[personal_phone]" id="ComplaintForm_personal_phone" type="tel">
+          <input class="form-control" name="ComplaintForm[personal_phone]" id="ComplaintForm_personal_phone" type="tel" required>
         </div>
       </div>
     </div>
@@ -159,6 +159,58 @@
 </form>
 <script type="text/javascript">
 jQuery(document).ready(function(){
+
+/*jquery validate*/
+ $('#step2').validate({
+        rules: {
+         'ComplaintForm[full_name]': {
+                minlength: 3,
+                maxlength: 15,
+                required: true
+            },
+			
+           'ComplaintForm[personal_email]':  {
+			  required: true,
+			  email: true
+			},
+            'ComplaintForm[personal_phone]': {             
+			 required: true
+            }
+        },
+        messages: {
+            'ComplaintForm[full_name]': "Enter your Full Name",
+            'ComplaintForm[personal_email]': "Enter your Personal Email",	
+            'ComplaintForm[personal_phone]': "Enter your Personal Phone"						
+           },
+		    onfocusout: function (element, event) {
+            if (element.name !== "review_title") {
+                $.validator.defaults.onfocusout.call(this, element, event);
+            }
+        },
+		   		
+        highlight: function(element) {
+            $(element).closest('.form-group').addClass('has-error');
+            $(element).closest('.form-group').removeClass('has-success');
+        },
+        unhighlight: function(element) {
+            $(element).closest('.form-group').removeClass('has-error');
+            $(element).closest('.form-group').addClass('has-success');
+        },
+        errorElement: 'span',
+        errorClass: 'help-block small',
+        errorPlacement: function(error, element) {
+            if(element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    });
+	
+
+/*jquery validate*/
+
+
 	jQuery('#ComplaintForm_pissedReasonTemp_10').on('ifChanged', function(event){
 		//Check if checkbox is checked or not
 		var checkboxChecked = jQuery(this).is(':checked');
