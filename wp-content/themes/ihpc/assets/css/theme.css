@@ -1576,3 +1576,67 @@ h2._hottopics .icon{
 	position:relative;
 	top:-5px;
 }
+
+
+.btn-bycat.active, .btn-bycat:hover, .btn-bycat:focus {
+	background:#e2001a;
+	font-size:16px; 
+	color:#FFFFFF;
+	padding:7px 13px;
+	border:1px solid #e2001a;
+	border-radius:0px;
+
+}
+.mr-15{
+	margin-right:15px;
+}
+.btn-bycat {
+	font-size:16px; 
+	color:#e41d33;
+	padding:7px 13px;
+	border:1px solid #e2001a;
+	border-radius:0px;
+
+}
+.alfa-list{ margin:20px 0}
+.alfa-list a{
+	color:#888989;
+	font-size:18px;
+	display:inline-block;
+	padding:2px 8px;
+	border-radius:2px;
+	margin-right:16px;
+}
+.alfa-list a:hover, .alfa-list a.active, .alfa-list a:focus{
+	background:#e2001a;
+	color:#FFFFFF;
+}
+.list-group-horizontal .list-group-item a{ color:#555555;}
+.list-group-horizontal .list-group-item a.discript-text{display: inline-block; width: 80%;}
+.list-group-horizontal .list-group-item a.show-toggle {
+    display: inline-block;
+    width: 8%;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+.list-group-horizontal .list-group-item{
+	margin-left: 15px;
+	margin-right: 15px;
+	width:30.333%;
+	background:#f0f0f0;
+	margin-bottom:15px;
+}
+.chield { background:#fff; padding-top:15px; padding-bottom:15px; margin-top:12px; margin-bottom:-10px; }
+.chield .list-group-item{    
+	width: 92%;
+    margin: -1px 4%;
+	}
+span.badge.badge-list {
+    background: #e2001a;
+    padding: 5px 9px;
+}
+.hidden{ display:none}
+.list-group-horizontal .list-group.by_cat .list-group-item{ width:100%; margin:0px;    margin-bottom: -1px; background:#ffffff;}
+.list-group-horizontal .list-group.by_cat { margin:12px 0px; margin-bottom:18px;}
