@@ -77,7 +77,6 @@ jQuery('.star-rating').barrating({
         } else {
             jQuery('.stars-example-fontawesome-o .current-rating')
                 .addClass('hidden');
-
             jQuery('.stars-example-fontawesome-o .your-rating')
                 .removeClass('hidden')
                 .find('span')
@@ -99,6 +98,7 @@ jQuery('.star-rating').barrating({
 
 /* Add remove list  Liked*/
 var wnum = 0; 
+var selectedwLiked = [];
 jQuery('#addwLiked').click(function() {	
  var item = jQuery('#wliekd') 
  if(!item.val()) {
@@ -109,6 +109,9 @@ jQuery('#addwLiked').click(function() {
       jQuery('#wliekd').parent().removeClass('has-error');	
       wnum++; 
       jQuery('ul#wliked-list').prepend("<li class=\"list-group-item\"><label>"+item.val()+"</label><div class=\"pull-right action-buttons\"><button type=\"button\" class=\"trash\"><span class=\"glyphicon glyphicon-trash\"></span></button></div></li>");
+        selectedwLiked.push( item.val() );
+        item.val('');            
+        item.next().val(selectedwLiked);
  } else{	 		
 	 jQuery('ul#wliked-list').prepend("<div class=\"alert alert-danger alert-dismissable\"><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></a>You can add only up to 5 likes</div>")		
 	};
@@ -122,32 +125,39 @@ jQuery('ul#wliked-list').on('click', 'li .trash', function() {
 
 
 /* Add remove list  Liked*/
-var num = 0; 
+var num = 0;
+var selectedLiked = [];
 jQuery('#addLiked').click(function() {	
- var item = jQuery('#liekd') 
- if(!item.val()) {
-    jQuery('#liekd').parent().addClass('has-error');
- }
- else{
-	if(num < 5){	
-	  console.log("nav value add");
-      jQuery('#liekd').parent().removeClass('has-error');	
-      num++; 
-      jQuery('ul#liked-list').prepend("<li class=\"list-group-item\"><label>"+item.val()+"</label><div class=\"pull-right action-buttons\"><button type=\"button\" class=\"trash\"><span class=\"glyphicon glyphicon-trash\"></span></button></div></li>");
- } else{	 		
-	 jQuery('ul#liked-list').prepend("<div class=\"alert alert-danger alert-dismissable\"><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></a>You can add only up to 5 likes</div>")		
-	};
-};
+    var item = jQuery('#liekd') 
+    if(!item.val()) {
+        jQuery('#liekd').parent().addClass('has-error');
+    }
+    else{
+        if(num < 5){	
+            console.log("nav value add");
+            jQuery('#liekd').parent().removeClass('has-error');	
+            num++;
+            jQuery('ul#liked-list').prepend("<li class=\"list-group-item\"><label>"+item.val()+"</label><div class=\"pull-right action-buttons\"><button type=\"button\" class=\"trash\"><span class=\"glyphicon glyphicon-trash\"></span></button></div></li>");
+            selectedLiked.push( item.val() );
+            item.val('');            
+            item.next().val(selectedLiked);
+        } 
+        else{	 		
+            jQuery('ul#liked-list').prepend("<div class=\"alert alert-danger alert-dismissable\"><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></a>You can add only up to 5 likes</div>")		
+        };
+    };
 });
+
 jQuery('ul#liked-list').on('click', 'li .trash', function() {
-console.log("nav value remove");
- num--;  														  
-  jQuery(this).closest("li").remove();
+    console.log("nav value remove");
+    num--;  														  
+    jQuery(this).closest("li").remove();
 });
 /* End add remove list Liked */
 
 /* Add remove list  UNLiked*/
 var numun = 0; 
+var selectedUnLiked = [];
 jQuery('#addunLiked').click(function() {	
  var item = jQuery('#unliekd') 
  if(!item.val()) {
@@ -159,6 +169,9 @@ jQuery('#addunLiked').click(function() {
       jQuery('#unliekd').parent().removeClass('has-error');	
       numun++; 
       jQuery('ul#unliked-list').prepend("<li class=\"list-group-item\"><label>"+item.val()+"</label><div class=\"pull-right action-buttons\"><button type=\"button\" class=\"trash\"><span class=\"glyphicon glyphicon-trash\"></span></button></div></li>");
+        selectedUnLiked.push( item.val() );
+        item.val('');            
+        item.next().val(selectedUnLiked);
  } else{	 		
 	 jQuery('ul#unliked-list').prepend("<div class=\"alert alert-danger alert-dismissable\"><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></a>You can add only up to 5 likes</div>")		
 	};
