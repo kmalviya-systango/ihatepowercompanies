@@ -29,14 +29,16 @@ if( !empty($_REQUEST['category_filter']) ){
 											'operator'=>'IN')
 									);
 }
-if( !empty($_REQUEST['location']) ){	
+if( !empty($_REQUEST['location']['address']) ){	
 	global $wpdb;
 	$address = $_REQUEST['location']['address'];
-	$sql 	 = "SELECT post_id FROM wpihpc_postmeta WHERE meta_value like '%$address%' AND meta_key = 'company_location' ";
+	$sql 	 = "SELECT * FROM wpihpc_postmeta WHERE meta_value like '%$address%' AND meta_key = 'company_location' ";
 	$postIds = $wpdb->get_results($sql,ARRAY_A);
 	if( !empty($postIds) ){
 		foreach ($postIds as $key => $id) {
-			$searchedId[] = $id['post_id'];
+			if( $id['meta_value'] != '' ){
+				$searchedId[] = $id['post_id'];
+			}			
 		}		
 	}	
 	/*$search_args['meta_query'] = array( 
@@ -51,8 +53,12 @@ if( !empty($_REQUEST['location']) ){
 if( !empty($_REQUEST['company_name']) ){
 	global $wpdb;
 	$mypostids = $wpdb->get_col("select ID from $wpdb->posts where post_title LIKE '%".$_REQUEST['company_name']."%' ");
-	$search_args['title'] 	= $_REQUEST['company_name'];
-	$searchedId[] 			= $mypostids;
+	//$search_args['title'] 	= $_REQUEST['company_name'];
+	if( !empty($mypostids) ){
+		foreach ($mypostids as $key => $ids) {
+			$searchedId[] = $ids;
+		}
+	}	
 	//$search_args['post__in'] = $mypostids;
 }
 if( !empty($_REQUEST['category_filter']) || !empty($_REQUEST['location']) || !empty($_REQUEST['company_name']) ){

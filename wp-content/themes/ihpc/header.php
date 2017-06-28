@@ -89,6 +89,7 @@ else{
               <?php
               $args   = array('hide_empty' => FALSE,'taxonomy' => 'companiestax');
               $terms  = get_terms($args);
+              echo '<option value="0">-Select Category-</option>';
               foreach($terms as $termsval){
                 echo '<option value="'. $termsval->term_id .'">'.$termsval->name .'</option>';
               }
