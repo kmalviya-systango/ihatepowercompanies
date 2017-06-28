@@ -8,6 +8,12 @@
  * @subpackage Twenty_Seventeen
  * @since 1.0
  */
+define('GOOGLE_KEY','AIzaSyCvwfRQ3ULTudFFo49MzXyC4xgFmsxpW4U'); 
+function my_acf_google_map_api( $api ){
+	$api['key'] = GOOGLE_KEY;	
+	return $api;	
+}
+add_filter('acf/fields/google_map/api', 'my_acf_google_map_api');
 
 /**
  * Twenty Seventeen only works in WordPress 4.7 or later.
@@ -557,14 +563,15 @@ function ihpc_scripts() {
 		'quote'  => ihpc_get_svg( array( 'icon' => 'quote-right' ) ),
 	);
 	
+	wp_enqueue_script( 'google_map', 'https://maps.googleapis.com/maps/api/js?key='.GOOGLE_KEY.'&libraries=places', array( 'jquery' ), '1.0', true );
 	wp_enqueue_script( 'bootstrap-min', get_theme_file_uri( '/assets/js/bootstrap.min.js' ), array( 'jquery' ), '2.1.2', true );
-	wp_enqueue_script( 'icheck.min', get_theme_file_uri( '/assets/js/icheck.min.js' ), array( 'jquery' ), '2.1.2', true );	
-	wp_enqueue_script( 'ihpcscripts', get_theme_file_uri( '/assets/js/ihpcscripts.js' ), array( 'jquery' ), '1.0', true );
+	wp_enqueue_script( 'icheck.min', get_theme_file_uri( '/assets/js/icheck.min.js' ), array( 'jquery' ), '2.1.2', true );		
 	wp_enqueue_script( 'Star', get_theme_file_uri( '/assets/js/jquery.barrating.js' ), array( 'jquery' ), '1.0', true );	
 	wp_enqueue_script( 'Tags', get_theme_file_uri( '/assets/js/bootstrap-tagsinput.js' ), array( 'jquery' ), '1.0', true );
-	wp_enqueue_script( 'jquery-validations', get_theme_file_uri( '/assets/js/jquery.validate.min.js' ), array( 'jquery' ), '1.0', true );
-	wp_localize_script('ihpcscripts','ihcpvars',array('ihcp_nonce' => wp_create_nonce('ihcp_nonce'), 'ihcp_ajax_url' => admin_url( 'admin-ajax.php' )));
+	wp_enqueue_script( 'jquery-validations', get_theme_file_uri( '/assets/js/jquery.validate.min.js' ), array( 'jquery' ), '1.0', true );	
+	wp_enqueue_script( 'ihpcscripts', get_theme_file_uri( '/assets/js/ihpcscripts.js' ), array( 'jquery' ), '1.0', true );
 
+	wp_localize_script('ihpcscripts','ihcpvars',array('ihcp_nonce' => wp_create_nonce('ihcp_nonce'), 'ihcp_ajax_url' => admin_url( 'admin-ajax.php' )));
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -1289,8 +1296,11 @@ function review_location_form_callback(){
 		update_post_meta($reviewId,'_company_website',$business_type_url);
 	}
 	if( !empty($data['location']) ){
-		echo $location 	= json_encode($data['location']);
-		update_post_meta($reviewId,'_review_location',$location);
+		$value = $data['location'];
+		$loc = serialize($value);
+		update_field('_review_location', $value, $reviewId);
+		//$location 	= json_encode($data['location']);
+		update_post_meta($reviewId,'_review_location',$loc);
 	}
 	echo $url = site_url()."/submit-review?screen_no=4&reviewId=$reviewId";
 	exit();
@@ -1442,7 +1452,7 @@ add_filter('wp_bootstrap_pagination_defaults', 'customize_wp_bootstrap_paginatio
 /****
 * This function will return all the information related to the company
 ****/
-function get_company($company_id){
+function get_company_review($company_id){
 	$args = array(	'posts_per_page' => -1,
 					'post_type'	=> 'review',
 					'meta_key'     => 'REVIEW_COMPANYID',
@@ -1457,7 +1467,6 @@ function get_company($company_id){
 		while ( $the_query->have_posts() ) {
 			$the_query->the_post();
 			$review_id 	= get_the_ID();
-
 			//An array of liked elements
 			$iLiked 	= get_post_meta($review_id,'_i_liked',true);
 			if( !empty($iLiked) ){
@@ -1471,7 +1480,6 @@ function get_company($company_id){
 					}
 				}
 			}
-
 			//An array of unliked elements
 			$iUnLiked 	= get_post_meta($review_id,'_i_did_not_liked',true);
 			if( !empty($iUnLiked) ){
@@ -1486,22 +1494,22 @@ function get_company($company_id){
 				}
 			}				
 
-			$returnArray['reviews'][$review_id]['review_title'] 	 	= get_the_title();
-			$returnArray['reviews'][$review_id]['review_permalink'] 	= get_the_permalink();
-			$returnArray['reviews'][$review_id]['rating_location'] 	= 		$ratingLocation[] = get_post_meta($review_id,'_location',true);
-			$returnArray['reviews'][$review_id]['rating_diversity_product'] = 	$ratingDP[] = get_post_meta($review_id,'_diversity_of_products_or_services',true);
-			$returnArray['reviews'][$review_id]['rating_advertised'] 	= 		$ratingA[] 	= get_post_meta($review_id,'_advertised_vs_delivered',true);
-			$returnArray['reviews'][$review_id]['rating_website'] 		= $ratingW[] = get_post_meta($review_id,'_website',true);
-			$returnArray['reviews'][$review_id]['rating_staff'] 		= $ratingS[] = get_post_meta($review_id,'_staff',true);
+			$returnArray['reviews'][$review_id]['review_title'] = get_the_title($review_id);
+			$returnArray['reviews'][$review_id]['review_permalink'] = get_the_permalink($review_id);
+			$returnArray['reviews'][$review_id]['rating_location'] = $ratingLocation[] = get_post_meta($review_id,'_location',true);
+			$returnArray['reviews'][$review_id]['rating_diversity_product'] = $ratingDP[] = get_post_meta($review_id,'_diversity_of_products_or_services',true);
+			$returnArray['reviews'][$review_id]['rating_advertised'] = $ratingA[] 	= get_post_meta($review_id,'_advertised_vs_delivered',true);
+			$returnArray['reviews'][$review_id]['rating_website'] = $ratingW[] = get_post_meta($review_id,'_website',true);
+			$returnArray['reviews'][$review_id]['rating_staff'] = $ratingS[] = get_post_meta($review_id,'_staff',true);
 			$returnArray['reviews'][$review_id]['rating_price_affordability'] = $ratingPA[] = get_post_meta($review_id,'_price_affordability',true);
 			$returnArray['reviews'][$review_id]['rating_value_for_money'] = $ratingVM[] = get_post_meta($review_id,'_value_for_money',true);
 			$returnArray['reviews'][$review_id]['rating_exchange_refund'] = $ratingER[] = get_post_meta($review_id,'_exchange_refund_and_cancellation_policy',true);
-			$returnArray['reviews'][$review_id]['i_liked'] 			= $iLiked;
-			$returnArray['reviews'][$review_id]['i_did_not_liked'] 	= $iUnLiked;
+			$returnArray['reviews'][$review_id]['i_liked'] = $iLiked;
+			$returnArray['reviews'][$review_id]['i_did_not_liked'] = $iUnLiked;
 			$returnArray['reviews'][$review_id]['tags'] = get_post_meta($review_id,'_tags',true);
-			$returnArray['reviews'][$review_id]['other_companies'] 	= get_post_meta($review_id,'_what_were_other_companies_you_considered',true);
-			$returnArray['reviews'][$review_id]['_value_of_loss'] 		= $loss[] = get_post_meta($review_id,'_value_of_loss',true);
-			$returnArray['reviews'][$review_id]['ihpc_post_views'] 	= get_post_meta($review_id,'ihpc_post_views',true);
+			$returnArray['reviews'][$review_id]['other_companies'] = get_post_meta($review_id,'_what_were_other_companies_you_considered',true);
+			$returnArray['reviews'][$review_id]['_value_of_loss'] = $loss[] = get_post_meta($review_id,'_value_of_loss',true);
+			$returnArray['reviews'][$review_id]['ihpc_post_views'] = get_post_meta($review_id,'ihpc_post_views',true);
 			$i++;	
 		}
 		//Calculations
@@ -1521,6 +1529,7 @@ function get_company($company_id){
 		$returnArray['calculations']['average_loss'] = empty($average_loss) ? 0 : $average_loss;
 		$returnArray['calculations']['total_loss_metric'] 	 = ihpc_human_number($total_loss,0,'metric');
 		$returnArray['calculations']['average_loss_metric']  = ihpc_human_number($average_loss,0,'metric');
+		wp_reset_postdata();
 	}
 	return $returnArray;
 }
@@ -1540,4 +1549,27 @@ function ihpc_human_number($num, $places = 1, $type = 'human') {
     }
 
     return $num_format;
+}
+
+
+function get_locations($postType){
+	$args = array(	'posts_per_page' => -1,
+					'post_type'	=> $postType,
+					'meta_key' => 'company_location'
+				);	
+	$the_query 	= new WP_Query( $args );
+	$array 		= array();
+	$i = 0;
+	// The Loop
+	if ( $the_query->have_posts() ) {
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			$array[$i]['id'] 	   = get_the_ID();
+			$array[$i]['location'] = get_post_meta(get_the_ID(),'company_location',true);
+			$i++;
+		}
+		/* Restore original Post Data */
+		wp_reset_postdata();
+		return $array;
+	} 
 }

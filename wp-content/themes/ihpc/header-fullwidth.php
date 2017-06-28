@@ -78,10 +78,12 @@ else{
             <input name="company_name" id="company_name" class="form-control search-input width-100" placeholder="Company Name" value="" type="text">
           </div>
           <div class="col-lg-4 col-md-4 separator model-select col-sm-4 col-xs-12">
-            <input name="location" id="location" class="form-control search-input width-100" placeholder="Location" value="" type="text">
+            <input name="location" id="place_search" class="form-control search-input width-100" placeholder="Location" value="" type="text">
+            <input type="hidden" id="glat" name="location[latitude]" value="" />
+            <input type="hidden" id="glong" name="location[longitude]" value="" />
           </div>
           <div class="col-lg-4 col-md-4  col-sm-4 col-xs-12">
-            <select name="model" id="model" class="form-control">
+            <select name="category_filter" id="model" class="form-control">
               <?php
               $args   = array('hide_empty' => FALSE,'taxonomy' => 'companiestax');
               $terms  = get_terms($args);

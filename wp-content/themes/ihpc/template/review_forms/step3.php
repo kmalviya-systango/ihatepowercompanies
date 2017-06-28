@@ -16,7 +16,7 @@
 					<p class="hint">Choose company's location from the list or click on a marker.</p>					
 			        <div class="row">
                         <div class="col-sm-12">
-                           <input id="place_search" type="text" class="form-control gllpSearchField" placeholder="Enter a location">
+                           <input id="place_search" type="text" name="location[address]" class="form-control gllpSearchField" placeholder="Enter a location">
                         </div>
                     </div>
                    <br/>
@@ -34,8 +34,8 @@
 
 			</div>
 			<div class="col-md-12">
-                <input type="hidden" id="glat" name="location[latitude]" value="" />
-                <input type="hidden" id="glong" name="location[longitude]" value="" />
+                <input type="hidden" id="glat" name="location[lat]" value="" />
+                <input type="hidden" id="glong" name="location[lng]" value="" />
 				<input type="submit" value="Proceed" class="btn form-btn">                
 				<a href="<?php echo site_url()."/submit-review?screen_no=4&reviewId=$reviewId" ?>" class="btn form-btn ml-10">Didn't find on the map</a>
             	<a href="<?php echo site_url()."/submit-review?screen_no=4&reviewId=$reviewId" ?>" class="btn form-btn ml-10">Skip</a>
@@ -43,8 +43,17 @@
 		</div>
 	</div>
 </form>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvwfRQ3ULTudFFo49MzXyC4xgFmsxpW4U&libraries=places"></script>
 <script type="text/javascript">
+jQuery(document).ready(function(){	
+	jQuery('input').on('ifChecked', function(event){
+		var inputValue = jQuery(this).attr("value");
+		var targetBox = jQuery("." + inputValue);
+		jQuery(".custom-url-box").not(targetBox).hide();
+		jQuery(targetBox).show();
+	});	
+	gmapM();
+});
+
 function gmapM() {
     var latlng = new google.maps.LatLng(51.4975941, -0.0803232);
     var map = new google.maps.Map(document.getElementById('map'), {
@@ -68,7 +77,6 @@ function gmapM() {
     //           map: map,
     //           anchorPoint: new google.maps.Point(0, -29)
     //         });
-
     autocomplete.addListener('place_changed', function() {
         marker.setVisible(false);
         var place = autocomplete.getPlace();
@@ -78,7 +86,6 @@ function gmapM() {
             window.alert("No details available for input: '" + place.name + "'");
             return;
         }
-
         // If the place has a geometry, then present it on a map.
         if (place.geometry.viewport) {
             map.fitBounds(place.geometry.viewport);
@@ -88,11 +95,8 @@ function gmapM() {
         }
         marker.setPosition(place.geometry.location);
         marker.setVisible(true);
-
         set_modal_lat_long(place.geometry.location.lat()
             .toFixed(6), place.geometry.location.lng().toFixed(6))
-
-
         var address = '';
         if (place.address_components) {
             address = [
@@ -101,9 +105,7 @@ function gmapM() {
                 (place.address_components[2] && place.address_components[2].short_name || '')
             ].join(' ');
         }
-
     });
-
     google.maps.event.addListener(marker, 'dragend', function(a) {
         set_modal_lat_long(a.latLng.lat().toFixed(6), a.latLng.lng().toFixed(6))
 
@@ -115,26 +117,7 @@ function gmapM() {
     google.maps.event.addListener(marker, 'drag', function(a) {
         set_modal_lat_long(a.latLng.lat().toFixed(6), a.latLng.lng().toFixed(6))
     });
-
-
 };
-
-function set_modal_lat_long(lat, long) {
-    document.getElementById('glat').value = lat;
-    document.getElementById('glong').value = long;
-    /*jQuery('#longitude').text(long);
-    jQuery('#latitude').text(lat);*/
-}
-
-jQuery(document).ready(function(){	
-	jQuery('input').on('ifChecked', function(event){
-		var inputValue = jQuery(this).attr("value");
-		var targetBox = jQuery("." + inputValue);
-		jQuery(".custom-url-box").not(targetBox).hide();
-		jQuery(targetBox).show();
-	});	
-	gmapM();
-});
 
 jQuery(document).on('submit', '#step3', function(e){
     e.preventDefault();
@@ -152,7 +135,7 @@ jQuery(document).on('submit', '#step3', function(e){
         processData: false,
         success: function(response){
         	jQuery("#ajax_loader").hide();
-            //window.location.href = response;
+            window.location.href = response;
             console.log(response);
         }
     });
