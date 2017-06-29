@@ -57,8 +57,6 @@ jQuery( document ).ready(function() {
  $('form#step1').validate({
         rules: {
          review_title: {
-                minlength: 3,
-                maxlength: 15,
                 required: true
             },
             review_text: {

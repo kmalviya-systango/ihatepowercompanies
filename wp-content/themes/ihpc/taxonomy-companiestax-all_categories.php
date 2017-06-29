@@ -26,28 +26,24 @@ $categories = get_ihpc_categories('companiestax',0);
 	<ul class="list-group-horizontal mt-20">
 	<?php			 
 		if( ($_GET['tab'] == 'by_category') || !isset($_GET['tab']) ): 
-			foreach ($categories as $key => $category) :?>
-			
-			
+			foreach ($categories as $key => $category) :?>			
 				<li class="list-group-item col-sm-4">
-						<a class="discript-text" href="<?php echo $category['permalink'] ?>"><?php echo $category['name'] ?></a>
-						
-						<?php 
-							$childCategories = get_ihpc_categories('companiestax',0,$category['term_id']); 
-							if( !empty($childCategories) ): 
-								echo '<a class="badge-list show-toggle pull-right"><i class="fa fa-caret-down" aria-hidden="true"></i></a>
-						<span class="badge badge-list">'.$category['count'].'</span>
-<ul class="list-group-horizontal chield row hidden">';
+					<a class="discript-text" href="<?php echo $category['permalink'] ?>"><?php echo $category['name'] ?></a>						
+					<?php 
+						$childCategories = get_ihpc_categories('companiestax',0,$category['term_id']); 
+						if( !empty($childCategories) ): 
+							echo '<a class="badge-list show-toggle pull-right"><i class="fa fa-caret-down" aria-hidden="true"></i></a>
+								<span class="badge badge-list">'.$category['count'].'</span>
+								<ul class="list-group-horizontal chield row hidden">';
 								foreach ($childCategories as $key => $childCategory) : ?>
 									<li class="list-group-item ">
 										<a href="<?php echo $childCategory['permalink'] ?>"><?php echo $childCategory['name'] ?></a>
 										<span class="badge badge-list"><?php echo $childCategory['count'] ?></span>
 									</li>
-								<?php endforeach; 
-								echo '</ul>';
-								?>
-							<?php endif; ?>
-
+							<?php endforeach; 
+							echo '</ul>';
+							?>
+						<?php endif; ?>
 				</li>
 		<?php endforeach; ?>
 		</ul>
@@ -71,15 +67,9 @@ $categories = get_ihpc_categories('companiestax',0);
 </div>
 
 <?php get_footer(); ?>
+
 <script>
 $( document ).ready(function() {
-$('.by_cat:empty').each(function(){
-    if($.trim($(this).html()).length == 0){
-		$(this).parent().remove();
-    }
-});
-
-
 /*
 var alfaList = $('.alfa-list a').each(function () { 
 	$(this).attr('href');
@@ -90,25 +80,6 @@ var horizontalList =  $('.list-group-horizontal div').each(function () {
 });
 alert(horizontalList );
 */
-
-
-var maxHeight = Math.max.apply(null, $(".by_cat").map(function ()
-{
-    return $(this).height();
-}).get());
-
-  var highestBox = 0;
-$('.by_cat').each(function(){  
-	if($(this).height() > highestBox){  
-	highestBox = $(this).height();  
-}
-});    
-$('.by_cat').height(highestBox);	
-
-
-$(".show-toggle").click(function(){
-    $(this).next().next().toggleClass('hidden');
-});
 
 });
 </script>

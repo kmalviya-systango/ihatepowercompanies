@@ -4,17 +4,44 @@
 
 
 jQuery( document ).ready(function() {
-	jQuery('#_hottopics').prev().addClass('_hottopics');							 
+	//Adding class to hottopics
+    jQuery('#_hottopics').prev().addClass('_hottopics');
+    
+    //If no category is present then hide the element
+    jQuery('.by_cat:empty').each(function(){
+        if(jQuery.trim($(this).html()).length == 0){
+            jQuery(this).parent().remove();
+        }
+    });
+
+    var maxHeight = Math.max.apply(null, jQuery(".by_cat").map(function (){
+        return jQuery(this).height();
+    }).get());
+
+    var highestBox = 0;
+    jQuery('.by_cat').each(function(){  
+        if(jQuery(this).height() > highestBox){  
+            highestBox = jQuery(this).height();  
+        }
+    });
+
+    jQuery('.by_cat').height(highestBox);
+
+    jQuery(".show-toggle").click(function(){
+        jQuery(this).next().next().toggleClass('hidden');
+    });
+
+    initAutocomplete();
+
 });
+
 jQuery(window).load(function(){							 
-	jQuery('input').iCheck({
-    checkboxClass: 'icheckbox_square-red',
-    radioClass: 'iradio_square-red',
-    increaseArea: '20%' // optional
-  });				
-								
-
-
+    jQuery('input').iCheck({
+        checkboxClass: 'icheckbox_square-red',
+        radioClass: 'iradio_square-red',
+        increaseArea: '20%' // optional
+    });				
+	
     //console.log(ihcpvars.ihcp_ajax_url);
     //console.log(ihcpvars.ihcp_nonce);
     var ajaxurl = ihcpvars.ihcp_ajax_url;
@@ -322,4 +349,52 @@ function testAPI() {
     });
 }
 
+function set_modal_lat_long(lat, long) {
+    document.getElementById('glat').value = lat;
+    document.getElementById('glong').value = long;
+    /*jQuery('#longitude').text(long);
+    jQuery('#latitude').text(lat);*/
+}
 
+
+
+/*********
+* Google place auto complete address
+*
+* <input onFocus="geolocate()" id="autocomplete" type="text">
+* <input type="hidden" id="glat" name="location[latitude]" value="" />
+* <input type="hidden" id="glong" name="location[longitude]" value="" />
+********/
+var autocomplete;
+function initAutocomplete() {
+    autocomplete = new google.maps.places.Autocomplete(
+    /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+    {types: ['geocode']});
+    autocomplete.addListener('place_changed', fillInAddress);
+}
+
+function fillInAddress() {
+  var place     = autocomplete.getPlace();
+  var latitude  = place.geometry.location.lat().toFixed(6);
+  var longitude = place.geometry.location.lng().toFixed(6);
+  set_modal_lat_long(latitude,longitude);
+}
+
+function geolocate() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var geolocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            var circle = new google.maps.Circle({
+                center: geolocation,
+                radius: position.coords.accuracy
+            });
+            autocomplete.setBounds(circle.getBounds());
+        });
+    }
+}
+/***
+* END
+***/

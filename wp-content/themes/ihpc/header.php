@@ -78,13 +78,18 @@ else{
             <input name="company_name" id="company_name" class="form-control search-input width-100" placeholder="Company Name" value="" type="text">
           </div>
           <div class="col-lg-4 col-md-4 separator model-select col-sm-4 col-xs-12">
-            <input name="location" id="location" class="form-control search-input width-100" placeholder="Location" value="" type="text">
+            <!-- Google auto complete address: Start -->
+            <input onFocus="geolocate()" id="autocomplete" name="location[address]" class="form-control search-input width-100" placeholder="Location" value="" type="text">
+            <input type="hidden" id="glat" name="location[lat]" value="" />
+            <input type="hidden" id="glong" name="location[lng]" value="" />
+            <!-- Google auto complete address: End -->
           </div>
           <div class="col-lg-4 col-md-4  col-sm-4 col-xs-12">
-            <select name="model" id="model" class="form-control">
+            <select name="category_filter" id="model" class="form-control">
               <?php
               $args   = array('hide_empty' => FALSE,'taxonomy' => 'companiestax');
               $terms  = get_terms($args);
+              echo '<option value="0">-Select Category-</option>';
               foreach($terms as $termsval){
                 echo '<option value="'. $termsval->term_id .'">'.$termsval->name .'</option>';
               }

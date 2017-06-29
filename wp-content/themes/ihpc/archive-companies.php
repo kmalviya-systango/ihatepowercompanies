@@ -11,25 +11,61 @@
  */
 get_header();
 
-/*
+/*****
 * Start: Creating a query argument based on request parameters
-*/
+****/
 $search_args = array('post_type' => 'companies');
-if( !empty($_REQUEST['model']) ){
-	$search_args['tax_query'] = array(array('taxonomy'=>'companiestax','field'=>'id','terms'=> $_REQUEST['model'],'operator'=>'IN'));
+$searchedId  = array();
+
+if( !empty($_REQUEST['orderBy']) ){
+	$search_args['orderby'] = 'title';
+	$search_args['order'] 	= 'ASC';
 }
-if( !empty($_REQUEST['location']) ){
-	$search_args['meta_key'] 	= 'company_location';
-	$search_args['meta_value'] = $_REQUEST['location'];	
+
+if( !empty($_REQUEST['category_filter']) ){
+	$search_args['tax_query'] = array( array('taxonomy'=>'companiestax',
+											'field'=>'id',
+											'terms'=> $_REQUEST['category_filter'],
+											'operator'=>'IN')
+									);
+}
+if( !empty($_REQUEST['location']['address']) ){	
+	global $wpdb;
+	$address = $_REQUEST['location']['address'];
+	$sql 	 = "SELECT * FROM wpihpc_postmeta WHERE meta_value like '%$address%' AND meta_key = 'company_location' ";
+	$postIds = $wpdb->get_results($sql,ARRAY_A);
+	if( !empty($postIds) ){
+		foreach ($postIds as $key => $id) {
+			if( $id['meta_value'] != '' ){
+				$searchedId[] = $id['post_id'];
+			}			
+		}		
+	}	
+	/*$search_args['meta_query'] = array( 
+										array(	'key' => 'company_location',
+												'value' => maybe_serialize($_REQUEST['location']),
+												'Compare' => '=' 
+												)
+									);*/
+	//$search_args['meta_key'] 	= 'company_location';
+	//$search_args['meta_value'] = serialize($_REQUEST['location']);	
 }
 if( !empty($_REQUEST['company_name']) ){
 	global $wpdb;
 	$mypostids = $wpdb->get_col("select ID from $wpdb->posts where post_title LIKE '%".$_REQUEST['company_name']."%' ");
-	//$search_args['title'] = $_REQUEST['company_name'];
-	$search_args['post__in'] = $mypostids;
+	//$search_args['title'] 	= $_REQUEST['company_name'];
+	if( !empty($mypostids) ){
+		foreach ($mypostids as $key => $ids) {
+			$searchedId[] = $ids;
+		}
+	}	
+	//$search_args['post__in'] = $mypostids;
 }
-if( !empty($_REQUEST['model']) || !empty($_REQUEST['location']) || !empty($_REQUEST['company_name']) ){
-	$GLOBALS['wp_query'] = new WP_Query( $search_args );	
+if( !empty($_REQUEST['category_filter']) || !empty($_REQUEST['location']) || !empty($_REQUEST['company_name']) ){
+	if( !empty($searchedId) ){
+		$search_args['post__in'] = $searchedId;
+	}
+	$GLOBALS['wp_query'] = new WP_Query( $search_args );
 }
 /*
 * End;
@@ -58,9 +94,9 @@ if( !empty($_REQUEST['model']) || !empty($_REQUEST['location']) || !empty($_REQU
 			<div class="clearfix"></div>
 			<strong class="red_bold">Most complained about</strong>
 			<div class="sorting">
-				<div class="col-sm-3 col-md-2"><span>A-Z</span></div>
-				<div class="col-sm-3 col-md-2"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Location</div>
-				<div class="col-sm-3 col-md-2"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/categories.png"> Category</div>
+				<div class="col-sm-3 col-md-2"><a href="<?php echo site_url('companies?orderBy=alpha') ?>"><span>A-Z</span></a></div>
+				<div class="col-sm-3 col-md-2"><a data-toggle="modal" data-target="#choose-location"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Location</a></div>
+				<div class="col-sm-3 col-md-2"><a data-toggle="modal" data-target="#choose-category"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/categories.png"> Category</a></div>
 				<div class="clearfix"></div>
 			</div>
 		</div>
@@ -72,100 +108,9 @@ if( !empty($_REQUEST['model']) || !empty($_REQUEST['location']) || !empty($_REQU
 			if ( have_posts() ) : ?>
 				<?php
 				/* Start the Loop */
-				while ( have_posts() ) : the_post(); ?>
-					<div id="post-<?php the_ID(); ?>" class="company_list clearfix">
-						<?php $company = get_company( get_the_ID() ); ?>
-					    <div class="col-sm-2">
-					        <?php if ( '' !== get_the_post_thumbnail() && ! is_single() ) : ?>
-					            <div class="company_logo">
-					                <a href="<?php the_permalink(); ?>">
-					                    <?php the_post_thumbnail( 'ihpc-featured-image' ); ?>
-					                </a>
-					            </div><!-- .post-thumbnail -->
-					        <?php endif; ?>
-					    </div>
-					    <div class="col-sm-5">
-					       <a href="<?php echo esc_url(get_permalink()); ?>"><h3 class="company_list_title"><?php echo get_the_title(); ?> </h3></a>
-					        <?php $company_website = get_field( "company_website" );  ?>
-					        <a href="<?php echo esc_url($company_website); ?>"><p class="company_url"><?php echo $company_website; ?></p></a>
-					        <p><?php echo wp_trim_words( get_the_content(), 95, '...'); ?>
-					        </p>
-					    </div>
-					    <div class="col-sm-3 customer_feedback">
-					    	<?php if( !empty($company['i_like']) ): ?>
-					        <h3 class="customer_list_title"><img src="<?php echo get_template_directory_uri(); ?>/assets/images/like.png"> Customers like </h3>
-					        <p class="pl-30">
-					        	<?php
-					        	$count = 0; 
-					        	foreach ($company['i_like'] as $key => $like) {
-					        		if($count<3)
-					        			echo "<div>".$key."<span> $like</span></div>";
-					        		$count++;
-					        	} 
-					        	?>				        	
-					        </p>
-					    <?php endif; ?>
-					        <div class="separatore clearfix"></div>
-					        <?php if( !empty($company['i_didnot_like']) ): ?>
-					        <h3 class="customer_list_title"><img src="<?php echo get_template_directory_uri(); ?>/assets/images/unlike.png"> Customers like </h3>
-					        <p class="pl-30">
-					        	<?php
-					        	$count = 0; 
-					        	foreach ($company['i_didnot_like'] as $key => $notlike) {
-					        		if($count<3)
-					        			echo "<div>".$key."<span> $notlike</span></div>";
-					        		$count++;
-					        	} 
-					        	?>
-					        </p>
-					        <?php endif; ?>
-					    </div>
-					    <div class="col-sm-2">
-					        <?php
-					        if( !empty($company['calculations']['star_ratting']) ): ?>
-					            <h3 class="text-center rating_title "><?php echo round($company['calculations']['star_ratting'],2) ?></h3>
-					            <div class="rating_bulb"><img src="<?php echo get_template_directory_uri(); ?>/assets/images/rating_bulb.png"></div>
-					        <?php
-					        endif;
-					        ?>        
-					        <?php 
-					            if( !is_user_logged_in() ){
-					                echo '<a data-toggle="modal" data-target="#choose-a-plan" class="respond_customer_btn">Respond to your customers</a>';
-					            }
-					            else{
-					                echo '<a href="'.get_permalink().'" class="respond_customer_btn">Respond to your customers</a>';   
-					            }
-					        ?>        
-					    </div>
-					    <div class="clearfix"></div>
-					    <div class="col-md-10 col-md-offset-2 customer_list_footer">
-					        <div class="col-sm-1 text-center c_l_f_resolved"> <strong>23</strong> Issues<br>
-					            Resolved </div>
-					        <div class="col-sm-1 text-center c_l_f_reviews"> <?php echo get_company_reviews( get_the_ID() ) ?>
-					            Reviews </div>
-					        <div class="col-sm-1 text-center c_l_f_losses"> $
-					        	<?php 
-					        		if( !empty($company['calculations']['total_loss_metric']) )
-					        			echo $company['calculations']['total_loss_metric'];
-					        		else
-					        			echo 0;
-					        	?>
-					            claimed<br>
-					            losses </div>
-					        <div class="col-sm-1 text-center c_l_f_average"> $
-					        	<?php 
-					        		if( !empty($company['calculations']['average_loss_metric']) )
-					        			echo $company['calculations']['average_loss_metric'];
-					        		else
-					        			echo 0;
-					        	?><br>
-					            average </div>
-					        <div class="col-sm-1 text-center c_l_f_view "> 0<br>
-					            views </div>        
-					    </div>
-					</div><!-- #post-## -->
-				<?php 
-				endwhile;			
+				while ( have_posts() ) : the_post();
+					get_template_part( 'template-parts/post/content', 'company' );
+				endwhile;
 			else :
 			get_template_part( 'template-parts/post/content', 'none' );
 			endif; ?>
@@ -226,13 +171,117 @@ if( !empty($_REQUEST['model']) || !empty($_REQUEST['location']) || !empty($_REQU
     </div>
 </div>
 
-<?php
-$args = array('hide_empty' => FALSE,'taxonomy' => 'companiestax');
+<?php 
+/****
+* Getting all the categories of company
+*****/
+$categories = get_ihpc_categories('companiestax',0); ?>
+<!-- Bootstrap modal to filter by category: Start -->
+<div class="modal fade ihpc-modal in" id="choose-category" role="dialog">
+	<div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<div class="modal-header" style="border-bottom: 0;">
+	              <button type="button" class="close" data-dismiss="modal">
+	                     <span aria-hidden="true">×</span>
+	                     <span class="sr-only">Close</span>
+	              </button>
+	              <h4 class="modal-title">Filter Companies by Category</h4>
+	        </div>
+	        <div class="modal-body row">
+	        	<div class="col-md-12">
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-toggle="tab" href="#brief_categories">Brief</a></li>
+						<li><a data-toggle="tab" href="#details_categories">Details</a></li>
+					</ul>
+					<div class="tab-content">
+						<div id="brief_categories" class="tab-pane fade in active">
+							<?php 
+							foreach ($categories as $key => $category) :?>			
+								<li class="list-group-item col-sm-4">
+									<a class="discript-text" href="<?php echo site_url('companies?category_filter=').$category['term_id'] ?>"><?php echo $category['name'] ?></a>						
+									<?php 
+										$childCategories = get_ihpc_categories('companiestax',0,$category['term_id']); 
+										if( !empty($childCategories) ): 
+											echo '<a class="badge-list show-toggle pull-right"><i class="fa fa-caret-down" aria-hidden="true"></i></a>
+												<span class="badge badge-list">'.$category['count'].'</span>
+												<ul class="list-group-horizontal chield row hidden">';
+												foreach ($childCategories as $key => $childCategory) : ?>
+													<li class="list-group-item ">
+														<a href="<?php echo site_url('companies?category_filter=').$childCategory['term_id'] ?>"><?php echo $childCategory['name'] ?></a>
+														<span class="badge badge-list"><?php echo $childCategory['count'] ?></span>
+													</li>
+											<?php endforeach; 
+											echo '</ul>';
+											?>
+										<?php endif; ?>
+								</li>
+							<?php endforeach; ?>
+						</div>
+						<div id="details_categories" class="tab-pane fade">
+							<?php 
+								foreach (range('A', 'Z') as $char) {
+									echo '<div class="col-md-4" id="'.$char.'"><h3>'.$char.'</h3><ul class="list-group by_cat ">';
+									foreach ($categories as $key => $category):
+										$cat_name = ucfirst((trim($category['name'])) );
+										$firstLetter = substr($cat_name, 0,1);
+										if($char == $firstLetter){
+											echo '<li class="list-group-item">
+													<a href="'.site_url('companies?category_filter=').$category['term_id'].'">'.$category['name'].'</a>
+													<span class="badge badge-list">'.$category['count'].'</span>
+												</li>';
+										}
+									endforeach;
+									echo '</ul></div>';
+								}
+							?>
+						</div>					
+					</div>
+				</div>
+            </div>            
+            <!-- Modal Footer -->
+            <div class="modal-footer"></div> 
+        </div>
+    </div>
+</div>
+<!-- END -->
 
-$terms = get_terms($args);
-//echo '<pre>';
-//print_r($terms);
+<!-- Bootstrap modal to filter by location: Start -->
+<div class="modal fade ihpc-modal in" id="choose-location" role="dialog">
+	<div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        	<div class="modal-header" style="border-bottom: 0;">
+	              <button type="button" class="close" data-dismiss="modal">
+	                     <span aria-hidden="true">×</span>
+	                     <span class="sr-only">Close</span>
+	              </button>
+	              <h4 class="modal-title">Filter Companies by Location</h4>
+	        </div>
+	        <div class="modal-body row">
+	        	<div class="col-md-12">
+	        		<!-- Google auto complete address: Start -->
+		            <input onFocus="geolocate()" id="autocomplete" name="location[address]" class="form-control search-input width-100" placeholder="Location" value="" type="text">
+		            <input type="hidden" id="glat" name="location[lat]" value="" />
+		            <input type="hidden" id="glong" name="location[lng]" value="" />
+		            <!-- Google auto complete address: End -->	
+		            <?php 
+		            $locations = get_locations('companies'); 
+		            if( !empty($locations) ){
+		            	foreach ($locations as $key => $location) {
+		            		if( !empty($location['location']) ){
+		            			$loc = $location['location'];
+		            			$url = site_url('companies?location[address]=').$loc['address'].'&location[lat]='.$loc['lat'].'&location[lng]='.$loc['lng'];
+		            			echo "<a href='".$url."'>$loc[address]</a>";
+		            		}		            		
+		            	}
+		            }		            
+		            ?>			
+				</div>
+            </div>            
+            <!-- Modal Footer -->
+            <div class="modal-footer"></div> 
+        </div>
+    </div>
+</div>
+<!-- END -->
 
-?>
-
-<?php get_footer(); 
+<?php get_footer(); ?>
