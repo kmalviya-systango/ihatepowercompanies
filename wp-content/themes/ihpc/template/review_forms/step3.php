@@ -152,8 +152,8 @@ jQuery(document).on('submit', '#step3', function(e){
         processData: false,
         success: function(response){
         	jQuery("#ajax_loader").hide();
-            //window.location.href = response;
-            console.log(response);
+            window.location.href = response;
+            //console.log(response);
         }
     });
 });
