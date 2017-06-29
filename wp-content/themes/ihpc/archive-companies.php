@@ -1,5 +1,5 @@
 <?php
-/**
+/** 
  * The template for displaying archive pages
  *
  * @link https://codex.wordpress.org/Template_Hierarchy
@@ -52,7 +52,8 @@ if( !empty($_REQUEST['location']['address']) ){
 }
 if( !empty($_REQUEST['company_name']) ){
 	global $wpdb;
-	$mypostids = $wpdb->get_col("select ID from $wpdb->posts where post_title LIKE '%".$_REQUEST['company_name']."%' ");
+	$companyNameSql = "select ID from $wpdb->posts where post_title LIKE '%".$_REQUEST['company_name']."%' ";
+	$mypostids = $wpdb->get_col($companyNameSql);
 	//$search_args['title'] 	= $_REQUEST['company_name'];
 	if( !empty($mypostids) ){
 		foreach ($mypostids as $key => $ids) {
@@ -67,6 +68,9 @@ if( !empty($_REQUEST['category_filter']) || !empty($_REQUEST['location']) || !em
 	}
 	$GLOBALS['wp_query'] = new WP_Query( $search_args );
 }
+/*echo "<pre>";
+print_r($search_args);
+echo "</pre>";*/
 /*
 * End;
 */
