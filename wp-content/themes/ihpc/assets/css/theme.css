@@ -1666,3 +1666,6 @@ span.badge.badge-list {
 .items-holder .item .info-block .location a{
 	font-size:14px;
 }
+
+.no-results .page-content{ font-size:16px; color:#4d4d4d;}
+.no-results .page-title{ color:#e2001a; font-weight:700; font-size:25px; border-bottom:0px;}

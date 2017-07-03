@@ -103,9 +103,6 @@ jQuery( document ).ready(function() {
     });
 /*jquery validate*/
 
-
-
-
 	jQuery( "#_add-photo" ).click(function() {
 	  jQuery(".add-photo").click();
 	});
