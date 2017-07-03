@@ -755,6 +755,15 @@ function ihpc_social_login(){
 include_once 'ihpc-widgets/most-active-users.php';
 include_once 'ihpc-widgets/most-active-companies.php';
 
+/***
+* After logout redirect user to home page.
+****/
+add_action('wp_logout','auto_redirect_after_logout');
+function auto_redirect_after_logout(){
+	wp_redirect( home_url() );
+	exit();
+}
+
 /****
 * Getting most hatted power companies
 ****/
@@ -1227,7 +1236,7 @@ function submit_reivew_form(){
 	}
 	exit();
 }
-//Function for step 2 and 3
+//Function for step 2
 add_action('wp_ajax_review_additional_form', 'review_additional_form_callback');
 add_action('wp_ajax_nopriv_review_additional_form', 'review_additional_form_callback');
 function review_additional_form_callback(){
@@ -1572,4 +1581,77 @@ function get_locations($postType){
 		wp_reset_postdata();
 		return $array;
 	} 
+}
+
+function get_review_meta($review_id){
+	$returnArray = array();	
+	//Ratting fields
+	$returnArray['rattings']['Location'] =  get_post_meta($review_id,'_location',true);
+	$returnArray['rattings']['Diversity of Products or Services'] = get_post_meta($review_id,'_diversity_of_products_or_services',true);
+	$returnArray['rattings']['Product or Service Quality'] = get_post_meta($review_id,'_product_or_service_quality',true);
+	$returnArray['rattings']['Advertised vs Delivered'] = get_post_meta($review_id,'_advertised_vs_delivered',true);
+	$returnArray['rattings']['Website'] = get_post_meta($review_id,'_website',true);
+	$returnArray['rattings']['Staff'] = get_post_meta($review_id,'_staff',true);
+	$returnArray['rattings']['Price Affordability'] = get_post_meta($review_id,'_price_affordability',true);
+	$returnArray['rattings']['Value for money'] = get_post_meta($review_id,'_value_for_money',true);
+	$returnArray['rattings']['Customer service'] = get_post_meta($review_id,'_customer_service',true);
+	$returnArray['rattings']['Exchange, Refund and Cancellation Policy'] = get_post_meta($review_id,'_exchange_refund_and_cancellation_policy',true);
+	//Liked fields
+	$returnArray['fields']['I liked'] = get_post_meta($review_id,'_i_liked',true);
+	$returnArray['fields']['I did not like'] = get_post_meta($review_id,'_i_did_not_liked',true);
+	//Reviewer fields
+	$returnArray['fields']['I am unhappy because of '] = get_post_meta($review_id,'_unhappy_because',true);
+	$returnArray['fields']['I am happy because of'] = get_post_meta($review_id,'_happy_because',true);
+	$returnArray['losses']['Value of your loss, $'] = get_post_meta($review_id,'_value_of_loss',true);
+	$returnArray['losses']['So I want'] = get_post_meta($review_id,'_want',true);	
+	return $returnArray;
+}
+
+/***
+* Getting comment in ihpc format
+****/
+function ihpc_comment($comment, $args, $depth){
+	if ( 'div' === $args['style'] ) {
+        $tag       = 'div';
+        $add_below = 'comment';
+    } else {
+        $tag       = 'li';
+        $add_below = 'div-comment';
+    }
+    ?>
+    <<?php echo $tag ?> <?php comment_class( empty( $args['has_children'] ) ? '' : 'parent' ) ?> id="comment-<?php comment_ID() ?>">
+    <?php if ( 'div' != $args['style'] ) : ?>
+        <div id="div-comment-<?php comment_ID() ?>" class="comment-body">
+    <?php endif; ?>
+    <div class="comment-meta commentmetadata"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ); ?>">
+        <?php
+        printf( __( '<cite class="fn">%s</cite>' ), get_comment_author_link() ); 
+        printf( __('%1$s at %2$s'), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)' ), '  ', '' );
+        ?>
+    </div>
+    <div class="comment-author vcard">
+        <div class="comment_author_image">
+        	<?php
+        	$authorID = get_comment_author( $comment->comment_ID );
+        	$pro_pic  = get_field('user_profile_pic','user_'.$authorID);
+			if( !empty($pro_pic) ){				
+				echo "<img src='$pro_pic' class='avatar avatar-128 photo avatar-default' height='128' width='128' />";
+			}
+			else if( $args['avatar_size'] != 0 ){
+				echo get_avatar( $comment, $args['avatar_size'] );
+			}
+    		?>
+        </div>
+        <?php if ( $comment->comment_approved == '0' ) : ?>
+	        <div><em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.' ); ?></em></div>
+	    <?php endif; ?>  
+	    <div class="comment_body"><?php comment_text(); ?></div>
+    </div>    
+    <div class="reply">
+        <?php comment_reply_link( array_merge( $args, array( 'add_below' => $add_below, 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
+    </div>
+    <?php if ( 'div' != $args['style'] ) : ?>
+    </div>
+    <?php endif; ?>
+    <?php
 }

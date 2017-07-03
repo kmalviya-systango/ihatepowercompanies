@@ -15,13 +15,32 @@ get_header(); ?>
 	<div class="wrap" id="review_page">
 		<?php if ( have_posts() ) : ?>
 			<header class="page-header">
-				<?php
-					the_archive_title( '<h1 class="page-title">', '</h1>' );
-					the_archive_description( '<div class="taxonomy-description">', '</div>' );
-				?>
+				<h1>Browse Complaints and Reviews</h1>
 			</header><!-- .page-header -->
 		<?php endif; ?>
-		<?php echo $count = $GLOBALS['wp_query']->post_count; ?>
+		<div class="search-box ">
+			<form action="" method="post" class="clearfix">
+				<div class="search-for-car clearfix">
+					<div class="inner-search">
+						<div class="col-lg-12 col-md-12  col-sm-12 col-xs-12">
+							<input required="required" name="company_name" id="company_name" class="form-control search-input width-100" placeholder="Company Name" type="text">
+						</div>
+					</div>
+					<input value="" class="btn-style inner-search-button " type="submit">
+				</div>
+				<div class="parameters">
+                    <ul class="list-inline" style="display: block;">
+						<li><span class="icon icon-company">Company</span></li>
+						<li><span class="icon icon-location">Location</span></li>
+						<li><span class="icon icon-category">Category</span></li>
+						<li><span class="icon icon-tag">Tag</span></li>
+						<li><span class="icon icon-comments">Recently<br> discussed</li>
+						<li><span class="icon icon-image">With media</span></li>
+					</ul>
+                </div>
+			</form>
+		</div>
+		<?php //echo $count = $GLOBALS['wp_query']->post_count; ?>
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main" role="main">
 			<?php
@@ -36,14 +55,12 @@ get_header(); ?>
 					 */
 					//get_template_part( 'template-parts/post/content', get_post_format() );
 					get_template_part( 'template-parts/post/content', 'review' );
-				endwhile;
-				the_posts_pagination( array(
-					'prev_text' => 'Prev',
-					'next_text' => 'Next'
-				) );
+				endwhile;				
 			else :
 				get_template_part( 'template-parts/post/content', 'none' );
-			endif; 
+			endif;
+			if ( function_exists('wp_bootstrap_pagination') )
+				wp_bootstrap_pagination();
 			?>
 			</main><!-- #main -->
 		</div><!-- #primary -->		

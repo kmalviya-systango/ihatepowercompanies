@@ -41,7 +41,6 @@
           ?>		  
 		  <li><i class="fa fa-clock-o" aria-hidden="true"></i><span class="fs12"><?php echo get_the_date() ?></span></li>
 		  <li><i class="fa fa-user" aria-hidden="true"></i><span class="fs12">by </span><span class="fs12"><?php echo get_the_author() ?></span></li>
-		  <li>#1044757</li>
           <li><?php ihpc_edit_link() ?></li>
 		</ul>
     </header><!-- .entry-header -->
@@ -56,11 +55,7 @@
 
     <div class="entry-content col-sm-10">
         <?php
-        /* translators: %s: Name of current post */
-        the_content( sprintf(
-            __( 'Read More... ', 'ihpc' ),
-            get_the_title()
-        ) );
+        echo wp_trim_words( get_the_content(), 90, '...');
 
         wp_link_pages( array(
             'before'      => '<div class="page-links">' . __( 'Pages:', 'ihpc' ),

@@ -27,7 +27,7 @@
        <a href="<?php echo esc_url(get_permalink()); ?>"><h3 class="company_list_title"><?php echo get_the_title(); ?> </h3></a>
         <?php $company_website = get_field( "company_website" );  ?>
         <a href="<?php echo esc_url($company_website); ?>"><p class="company_url"><?php echo $company_website; ?></p></a>
-        <p><?php echo wp_trim_words( get_the_content(), 95, '...'); ?></p>       
+        <p><?php echo wp_trim_words( get_the_content(), 90, '...'); ?></p>       
     </div>
     <div class="col-sm-3 customer_feedback">
         <?php if( !empty($company['i_like']) ): ?>
