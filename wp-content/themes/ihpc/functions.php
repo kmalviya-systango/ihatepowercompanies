@@ -755,6 +755,15 @@ function ihpc_social_login(){
 include_once 'ihpc-widgets/most-active-users.php';
 include_once 'ihpc-widgets/most-active-companies.php';
 
+/***
+* After logout redirect user to home page.
+****/
+add_action('wp_logout','auto_redirect_after_logout');
+function auto_redirect_after_logout(){
+	wp_redirect( home_url() );
+	exit();
+}
+
 /****
 * Getting most hatted power companies
 ****/
