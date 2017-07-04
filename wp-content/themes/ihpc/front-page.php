@@ -244,7 +244,7 @@ get_header(); ?>
 		<div class="col-sm-12">
 			<h1>Power Companies in the News</h1>
 			
-			<div id="myCarousel" class="carousel slide ">
+			<div id="myCarousel" class="carousel slide hidden-xs ">
 			  <div class="carousel-inner">
 			    <?php
 			    	$sliderRows = array(0,4,8);
@@ -281,6 +281,48 @@ get_header(); ?>
 				<a class="right carousel-control" href="#myCarousel" data-slide="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></a> 
 				<?php endif; ?>
 			</div>
+			
+			<!-- for mobile -->
+			
+			<div id="moCarousel" class="carousel slide visible-xs">
+			  <div class="carousel-inner">
+			    <?php
+			    	$sliderRows = array(0,4,8);
+			    	$countItems = 0;
+			    	foreach ($sliderRows as $keyouter => $sliderRowOffset) {
+			    		$sliderRow = get_post_by_category('post',$sliderRowOffset,4,'power-companies-in-the-news');
+						if( !empty($sliderRow) ){
+							//Generating slider row												
+							foreach ($sliderRow as $key => $post) {
+					    		if($keyouter == 0 && $key ==0)
+		     						$activeClass = 'active';
+								else
+									$activeClass = '';
+								$countItems++;
+								//Generating 4 items for slider
+								echo '<div class="item '.$activeClass.'">
+					      		<div class="row">';								
+								echo '<div class="col-sm-3">
+										<div class="card hover15">
+											<a href="'.$post['permalink'].'"><figure><img src="'.$post['img'].'" alt="Image" class="img-responsive card-img-top"></figure></a>
+											<div class="card-block">						  
+												<p class="card-text">'.$post['excerpt'].'</p>
+											</div>
+										</div>
+									</div>';
+							echo '</div></div>';									
+							}
+
+						}
+			    	}					
+				?>			    
+			  </div>
+				<?php if($countItems > 4): ?>
+				<a class="left carousel-control" href="#moCarousel" data-slide="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+				<a class="right carousel-control" href="#moCarousel" data-slide="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></a> 
+				<?php endif; ?>
+			</div>
+			
 			<!--/myCarousel-->
 		</div>		
 	</div>
@@ -298,7 +340,7 @@ get_header(); ?>
 				$categories = get_ihpc_categories('companiestax');
 				foreach ($categories as $key => $category) {
 					if( $category['slug'] != 'all_categories' && $category['slug'] != 'all_users' ){
-						echo "<div class='col-sm-2 text-center cat-icons'>
+						echo "<div class='col-sm-2 col-xs-6 text-center cat-icons'>
 								<a href='".$category['permalink']."'>
 									<img class='img-responsive' src='".$category['img_url']."' />
 									<span>".$category['name']."</span>

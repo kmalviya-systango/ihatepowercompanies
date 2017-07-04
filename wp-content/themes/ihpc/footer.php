@@ -68,16 +68,6 @@
 <?php wp_footer(); ?>
 
 <?php if(is_home()): ?>
-<script type="text/javascript">
-jQuery(window).scroll(function(){
-  if (jQuery(window).scrollTop() >= 50) {
-    jQuery('.sticky-header').addClass('fixed');
-   }
-   else {
-    jQuery('.sticky-header').removeClass('fixed');
-   }
-});
-</script>
 <?php endif; ?>
 
 </body>

@@ -182,4 +182,6 @@ if( !empty($_GET['success_msg']) ){
 </div>
 <!-- main-content -->
 <?php get_footer('fullwidth');?>
+<script>
 
+</script>

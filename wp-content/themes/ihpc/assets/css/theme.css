@@ -400,8 +400,10 @@ a.socialIcon:hover, .socialHoverClass {
 
 
 /* inner-page */
-.inner-page{ 
-	padding-top:105px;
+
+.top_header.sticky-header{ 
+	background:#f0f0f0;
+	border-bottom:1px solid #dcdcdc;
 }
 .inner-page .search-box{
 	margin-top:5px;
