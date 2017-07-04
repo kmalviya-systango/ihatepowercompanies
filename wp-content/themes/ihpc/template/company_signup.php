@@ -12,9 +12,26 @@ if ( is_user_logged_in() ) {
     wp_redirect( home_url() );
 }
 
-$contract_type = 'free_plan';
 if( !empty($_GET['contract_type']) ){
 	$contract_type = $_GET['contract_type'];
+	switch ($contract_type) {
+		case 'starter_plan':
+			$contract_type = 'free_plan';
+			$Title = "Free Plan Application<br/><small>For starters</small>";
+		break;
+		case 'plus_plan':
+			$contract_type = 'plus_plan';
+			$Title = "Plus Plan<br/><small>For customer service</small>";
+		break;
+		case 'enterprise_plan':
+			$contract_type = 'enterprise_plan';
+			$Title = "Enterprise Plan<br/><small>For customer service and marketing</small>";
+		break;
+		default:
+			$contract_type = 'free_plan';
+			$Title = "Free Plan Application";
+		break;
+	}
 }
 
 ?>
@@ -46,7 +63,10 @@ if( !empty($_GET['contract_type']) ){
 <!-- main-content -->
 <div class="container pt-40">
 	<div class="row">
-		<div class="col-md-12"><h1>Free Plan Application</h1></div>
+		<div class="col-md-12">
+			<?php ihpc_errors_display() ?>
+			<h1><?php echo $Title; ?></h1>
+		</div>
     	<form method="post" action="<?php echo admin_url('admin-post.php') ?>" >
     		<div class="form-group col-sm-6">
 				<label for="input5">Company Name <span class="required">*</span></label>
@@ -72,6 +92,7 @@ if( !empty($_GET['contract_type']) ){
 			<div class="form-group col-md-12">
 				<?php wp_nonce_field('register_company','security-code'); ?>				
 				<input type="hidden" name="action" value="register_company" />
+				<input type="hidden" name="redirect_url" value="<?php echo get_current_page_url() ?>" />
 				<input type="hidden" name="contract_type" value="<?php echo $contract_type ?>" />
 				<button type="button" class="btn" data-dismiss="modal">CANCEL</button>
 				<input type="submit" class="btn modal-footer-btn" value="SUBMIT">

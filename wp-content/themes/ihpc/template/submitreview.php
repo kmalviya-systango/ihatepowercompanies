@@ -29,7 +29,7 @@ ob_start();
 		</div><!-- #primary -->
 	</main><!-- #main -->	
 </div><!-- .wrap -->
-
+<?php ihpc_errors_display() ?>
 <?php
 /***
 * These variables will available in all these templates

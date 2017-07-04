@@ -248,7 +248,7 @@ function ihpc_setup() {
 	add_theme_support( 'starter-content', $starter_content );
 
 	//Adding three roles for company type
-	add_role('starter_plan', __( 'Free Plan' ),
+	/*add_role('starter_plan', __( 'Free Plan' ),
 		array(
 			'read'         => true,  // true allows this capability
 			'edit_posts'   => true,
@@ -268,7 +268,7 @@ function ihpc_setup() {
 			'edit_posts'   => true,
 			'delete_posts' => false, // Use false to explicitly deny
 		)
-	);
+	);*/
 }
 add_action( 'after_setup_theme', 'ihpc_setup' );
 
@@ -1089,11 +1089,10 @@ function register_company_callback(){
 			}
 			//END:
 			$user_arg = array();
-			$user_arg['user_pass'] 		= '123456789';
 			$user_arg['user_login'] 	= $_REQUEST['reg_company_name'];
 			$user_arg['user_email'] 	= $_REQUEST['reg_company_email'];
-			$user_arg['display_name'] 	= $_REQUEST['reg_company_title'];
-		    $user_arg['role'] 			= $_REQUEST['contract_type'];
+		    $user_arg['role'] 			= $_REQUEST['contract_type'];		    
+		    $redirect_url 	= $_REQUEST['redirect_url'];
 			$fullName = explode(" ", $_REQUEST['reg_company_fullname']);
 			if( count($fullName) == 1 ){
 				$firstName = $fullName[0];
@@ -1109,19 +1108,23 @@ function register_company_callback(){
 		    $user_id = wp_insert_user( $user_arg );		    
 		    if ( !is_wp_error( $user_id ) ) {
 		    	//Updating the user phone
-		    	update_user_meta( $user_id, 'user_phone	', $user_arg['reg_company_phone'] );
+		    	update_user_meta( $user_id, 'user_phone', $user_arg['reg_company_phone'] );
+		    	//Updating the user phone
+		    	update_user_meta( $user_id, 'user_company_designation', $user_arg['reg_company_title'] );
 		    	//Relating the user with company
 		    	update_user_meta( $user_id, 'associated_company', array($company_id) );
+		    	//Relating the company with user
+				wp_update_post( array('ID' => $company_id,'post_author' => $user_id) );
 				wp_send_new_user_notifications( $user_id, 'both' );
-				$redirect_to = site_url('company-signup?msg=successfull registered a free plan, please login to comment');
+				$redirect_to = $redirect_url.'&success=true&msg=2';
 				wp_safe_redirect( $redirect_to );
 			}
 			else{
-				$errors = $user_id->errors;
+				$errors = $user_id->errors;				
 				foreach ($errors as $key => $error) {
-					$msg 			= $error[0];
-					$redirect_to 	= site_url('login?msg='.$msg);
-					wp_safe_redirect( $redirect_to );					
+					$msg 			= $error[0];					
+					$redirect_to 	= $redirect_url.'&success=false&msg=existing_user_login';
+					wp_safe_redirect( $redirect_to );
 				}
 			}
 			exit();
@@ -1380,15 +1383,11 @@ function review_ratting_form_callback(){
 	//If user is logged in then assigning this review to that user and redirect to thank you page.
 	if( is_user_logged_in() ){
 		$user_id = get_current_user_id();
-		$arg = array(
-			'ID' => $reviewId,
-			'post_author' => $user_id,
-		);
-		wp_update_post( $arg );
-		echo $url = site_url('success?msg_id=1');
+		wp_update_post( array('ID' => $reviewId,'post_author' => $user_id) );
+		echo $url = site_url('submit-review?success=true&msg=3'); 
 	}
 	else{
-		echo $url = site_url("sign-up?msg_id=2&reviewId=$reviewId");
+		echo $url = site_url("signup-and-login?success=true&msg=4&reviewId=$reviewId");
 	}	
 	exit();
 }
@@ -1654,4 +1653,142 @@ function ihpc_comment($comment, $args, $depth){
     </div>
     <?php endif; ?>
     <?php
+}
+
+/****
+* This function doesnot return anything and just display the message.
+****/
+function ihpc_errors_display(){
+	if( !empty($_GET['success']) && ($_GET['success'] == 'true') ){
+		$smsg = $_GET['msg'];
+		switch ($smsg) {
+			case 1:
+				$smsg = "You have successfully registered now, please login to continue"; 
+			break;
+			case 2:
+				$smsg = "We have sent a link to your registered email id, please set your password through it"; 
+			break;
+			case 3:
+				$smsg = "Thanks, for submitting your review we will check and publish it shortly"; 
+			break;
+			case 4:
+				$smsg = "Thanks, for submitting your review please sign up or log in to keep track of your submitted review"; 
+			break;
+			case 5:
+				$smsg = "You have successfully registered now, #$_GET[reviewId] This is your review number. Please refer to it when communicating with the company."; 
+			break;
+		}  
+		echo "<div style='margin-bottom:0' class='alert alert-info text-center'>$smsg</div>";
+	}
+	elseif( !empty($_GET['success']) && ($_GET['success'] == 'false')){
+		$smsg = $_GET['msg'];
+		switch ($smsg) {
+			case 1:
+				$smsg = "Either your username or email is already present"; 
+			break;
+			case 2:
+				$smsg = "Invalid Captcha"; 
+			break;
+			case 3:
+				$smsg = "Password and confirm password are not same"; 
+			break;
+			case 4:
+				$smsg = "Password is incorrect"; 
+			break;
+			case 'existing_user_login':
+				$smsg = "Sorry, that company name or email already exists!"; 
+			break;
+		} 
+		echo "<div style='margin-bottom:0' class='alert alert-danger text-center'>$smsg</div>";
+	}
+}
+
+/***
+* Getting the current page url with query string
+****/
+function get_current_page_url() {
+  global $wp;
+  return add_query_arg( $_SERVER['QUERY_STRING'], '', home_url( $wp->request ) );
+}
+
+/***
+* Customizing the wp-login page
+****/
+function ihpc_login_logo() { ?>
+    <style type="text/css">
+        #login h1 a, .login h1 a {
+	        background-image: url("<?php echo get_stylesheet_directory_uri(); ?>/assets/images/logo.png");
+			height:65px;
+			width:320px;
+			background-size: 320px 65px;
+			background-repeat: no-repeat;
+	        padding-bottom: 30px;
+        }
+    </style>
+<?php }
+add_action( 'login_enqueue_scripts', 'ihpc_login_logo' );
+
+function ihpc_login_logo_url() {
+    return home_url();
+}
+add_filter( 'login_headerurl', 'ihpc_login_logo_url' );
+
+function ihpc_login_logo_url_title() {
+    return 'I hate power companies';
+}
+add_filter( 'login_headertitle', 'ihpc_login_logo_url_title' );
+
+
+
+/****
+* Sign up to IHPC
+****/
+function register_user_callback(){
+	//Userdata is an array to create a new user
+	$userdata = array();
+	$userdata['user_login'] = esc_attr( $_POST['user_name'] );
+	$userdata['user_email'] = esc_attr( $_POST['user_email'] );
+	$userdata['user_pass'] 	= esc_attr( $_POST['user_password'] );
+	$userdata['role'] 		= get_option('default_role');
+	//Credentials is an array to login a new user, if review id is set
+	$credentials = array();
+	$credentials['user_login'] 		= esc_attr($_POST['user_name']);
+	$credentials['user_password'] 	= esc_attr($_POST['user_password']);
+	//Creating a new user
+	$user_id = wp_insert_user( $userdata );				
+	if ( !is_wp_error( $user_id ) ) {
+		//Sending email to signup user: Start
+		$to = $userdata['user_email'];
+		$subject = 'Welcome to IHPC';
+		$message = "Hello $userdata[user_login],\nYou have successfully registered to IHPC and your credentials are
+					\n<b>UserName: </b>$userdata[user_login]
+					\n<b>Email: </b>$userdata[user_email]
+					\n<b>Passoword: </b>$userdata[user_pass]";
+		$headers = 'Content/type:text/html';
+		wp_mail($to,$subject,$message,$headers);
+		//END;
+		//If review id is set in then assign it with this user
+		if( !empty($_POST['review_id']) ){
+			$reviewId = $_POST['review_id'];
+			wp_update_post( array('ID' => $reviewId,'post_author' => $user_id) );
+			$signOnRes = wp_signon( $credentials,false);
+			if(!empty($signOnRes->ID)){
+				$redirectUrl = site_url('submit-review');
+				header("Location:$redirectUrl?success=true&msg=5&reviewId=$reviewId");	
+			}
+		}
+		else{
+			$redirectUrl = site_url('sign-up');
+			header("Location:$redirectUrl?success=true&msg=1");
+		}
+	}
+	else{
+		$redirectUrl = site_url('sign-up');
+		header("Location:$redirectUrl?success=false&$msg=1");
+	}
+	/*$userdata['user_login'] = $_POST['user_cpassword'];
+	$userdata['user_login'] = $_POST['user_phonenumber'];
+	$userdata['user_login'] = $_POST['user_readed_tc'];
+	$userdata['user_login'] = $_POST['captcha_code'];
+	$userdata['user_login'] = $_POST['captcha_prefix'];*/			
 }
