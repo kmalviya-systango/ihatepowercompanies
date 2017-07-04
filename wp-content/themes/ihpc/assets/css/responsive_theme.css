@@ -17,7 +17,7 @@
 	.pr-none-sm{ padding-right:0px !important;}
 	.top_header.navbar-fixed-top.sticky-header.fixed .navbar-header { margin-top: 24px; padding-bottom: 4px;}
 	.top_header .navbar-nav > li > a{padding:7px 10px; font-size: 13px;}
-	.top_header .navbar-nav > li.top_submit_review a{ margin-left: 10px; margin-right: 10px;}
+
 	.testimonial_slider .carousel-inner{width: 80%; margin:0px auto;}
 	.testimonial_slider .carousel-inner .item p{ font-size:16px;}
 	.testimonial_slider .carousel-inner .item .client small { font-size: 14px;}
@@ -25,7 +25,7 @@
 	.business_product p{ font-size: 18px;}
 	.business_plans ul{ margin-bottom:25px;}	
 	.business_plans{padding-bottom: 35px;}
-	
+	.top_header .navbar-nav > li.top_submit_review a{  padding-left: 10px !important; padding-right: 10px !important;}	
 	.login_signup{ width:550px; max-width:100%; float: none; margin: 0 auto;}
 	.social_button li a{ width:210px;}	
 	.pt-20-sm{ padding-top:20px !important;}
@@ -33,7 +33,6 @@
 	.customer_list_footer { margin:20px 0px;}
 	.customer_list_footer li { width:14%;}
 	.customer_list_footer li:last-child{ width:30%;}
-	.navbar{ margin-bottom:20px;}
 	.banner h1{font-size: 40px;}
 	.banner h3 br{ display:none;}
 	.theme_btn, .theme_btn:hover, .theme_btn:focus { background-size: 22px auto !important; font-size: 14px;}
@@ -47,14 +46,26 @@
 	.footer_social_section{ margin-top:-20px;}
 }
 @media screen and (max-width:767px){
+	.user-list h4{ margin-bottom:8px;}
+	.user-list .col-md-4{border:1px solid #d6d6d6;margin-bottom:15px;}
+	.user-list .panel{ margin-bottom:10px;}
+	.code-block img{ width:100%;}
+	.hc-home{ margin-bottom:30px;}
+	#moCarousel.carousel.slide .carousel-control.left{ margin-left:-23px; top:59%;}
+	#moCarousel.carousel.slide .carousel-control.right{ margin-right:-23px; top:59%;}
+	#moCarousel .item img{ width:100%;}
+	.home_button_sectation{ margin-top:20px; margin-bottom:30px;}
+	.banner{ padding-top:20px;background-size: auto 100%;}
 	.navbar-toggle{background-color: #e2001a; border: 1px solid #e2001a; margin-top: 20px;}
 	.navbar-toggle .icon-bar{background: #ffffff;}
 	.top_header .col-xs-12{ padding:0px;}
-	#myNavbar .navbar-nav, #myNavbar{ width:100%; padding:0px; margin:0px; }
+	#ihpc-nav .navbar-nav, #ihpc-nav{ width:100%; padding:0px; margin:0px; }
 	.top_header .top_login::after{ display:none;}
-	#myNavbar .navbar-nav{ margin-top:20px;}
-	.top_header #myNavbar .navbar-nav > li > a{ padding: 7px 15px; margin-top: 12px; font-size: 15px;}
-	.top_header #myNavbar{max-height: inherit !important;}
+	.top_header #ihpc-nav .navbar-nav > li{ border-bottom:1px solid #e2dfdf; margin:0px;}
+	.top_header #ihpc-nav .navbar-nav > li > a{     padding: 8px 0px;
+    font-size: 15px;
+	margin:5px 0px;}
+	.top_header #ihpc-nav{max-height: inherit !important;}
 	.active.top_submit_review > a { display: inline-block; width: auto !important;}
 	.business_plans h2{font-size: 30px;}
 	.business_plans h5 { font-size: 20px;}
@@ -83,7 +94,6 @@
 	.customer_list_footer li span{ font-size:19px;}
 	.customer_list_footer li:last-child{ width:100%; padding-left: 0px; padding-top: 25px;}
 	.cust_view{ width:100%;}
-	.navbar.home ul{ background:#ddd;}
 	.search-for-car{ padding: 8px !important; height: auto;}
 	.search-for-car .inner-search { width: 100% !important; height: auto; background:transparent;}
 	.search-for-car .separator::before, .banner h1 br{ display:none;}
@@ -91,8 +101,8 @@
 	.inner-search .col-lg-4 input{ background:transparent;}
 	.search-for-car .inner-search-button{ background-position: center center; position: static; width: 100%;}
 	.search-box{ padding:0px 15px; margin: 35px auto 24px; width: 480px; max-width:100%;}
-	.banner h1 { font-size: 32px;}
-	.top_header.navbar-fixed-top.sticky-header{ z-index:99999;}
+	.banner h1 { font-size: 23px;}
+	.top_header.navbar-fixed-top.sticky-header{ z-index:99999; width:90%;}
 	.theme_btn, .theme_btn:hover, .theme_btn:focus{ background-size: auto auto !important; font-size: 18px; margin: 0 auto 10px; width: 310px; max-width:100%;}
 	.submit_review, .submit_review:focus, .submit_review:hover { background-position: 60px center !important;}
 	.explore_review, .explore_review:hover, .explore_review:focus { background-position: 20px center !important;}
@@ -100,8 +110,10 @@
 	.pad-lft-none-xs{ padding-left:0px !important;}
 	.pad-rgt-none-xs{ padding-right:0px !important;}
 	.main-content .thumbnail .read_more{ margin: 0 auto; width: 180px; max-width:100%;}
-	.main-content .thumbnail{margin: 0 auto 20px; width: 263px; max-width:100%;}
+	.main-content .thumbnail{margin: 0 auto 20px; width: 100%; max-width:100%;}
+	.main-content .thumbnail .read_more{ width:100%;}
 	.ipccf_footer h1{ font-size:29px;}
 	.footer-sitemap ul{ margin-bottom:40px;}
 	.newsletter_footer { margin-top: 30px;}
+	.top_header #ihpc-nav .navbar-nav > li.for-mobile{ display:none;}	
 }

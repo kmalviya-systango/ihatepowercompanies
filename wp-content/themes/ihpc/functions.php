@@ -43,7 +43,7 @@ if ( version_compare( $GLOBALS['wp_version'], '4.7-alpha', '<' ) ) {
   	$wrap .= '<li class="active top_submit_review"><a href="'.site_url('submit-review').'">submit review</a></li>
   			<li class="top_login"><a href="'.site_url('login').'">Log in</a></li>
   			<li><a href="'.site_url('sign-up').'">Sign up</a></li>
-  			<li><a href="#"><img src="'.site_url("wp-content/themes/ihpc/assets/images/bars_icon.png").'"></a></li>';
+  			<li class="for-mobile"><a href="#"><img src="'.site_url("wp-content/themes/ihpc/assets/images/bars_icon.png").'"></a></li>';
   }
   else{
   	$wrap .= '<li class="active top_submit_review"><a href="'.site_url('submit-review').'">submit review</a></li>

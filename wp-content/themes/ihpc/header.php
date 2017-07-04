@@ -18,6 +18,7 @@ global $redux_ihpc;
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="profile" href="http://gmpg.org/xfn/11">
 <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <?php wp_head(); ?>
@@ -43,20 +44,21 @@ else{
   $introh3text = "Find your power company and share your story of why you hate them. Simple. <br> Together, we can change the way these companies do business.";
 }
 ?>
-<?php 
-/*if(is_front_page()){
-	$navclass= "";
-} else{
-	$navclass ="fixed";
-} */
-?>
-<div class="top_header navbar-fixed-top sticky-header <?php //echo $navclass; ?> fixed">
-  <nav class="navbar">
+
+<div class="top_header sticky-header">
+  <nav class="navbar home">
     <div class="container-fluid">
-      <div class="col-lg-3">
-        <div class="navbar-header"> <a class="navbar-brand" href="<?php echo site_url(); ?>"><img src="<?php bloginfo('template_url'); ?>/assets/images/logo.png"></a> </div>
+      <div class="col-xs-12 col-sm-2 pr-none-sm col-lg-3">
+        <div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#ihpc-nav">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		
+		 <a class="navbar-brand" href="<?php echo site_url(); ?>"><img src="<?php bloginfo('template_url'); ?>/assets/images/logo.png"></a> </div>
       </div>
-      <div class="col-lg-9">
+      <div class="col-xs-12 col-sm-10 col-lg-9 pr-none-sm">	  
 		<?php if ( has_nav_menu( 'top' ) ) : ?>
 			<?php get_template_part( 'template-parts/navigation/navigation', 'top' ); ?>
 		<?php endif; ?>

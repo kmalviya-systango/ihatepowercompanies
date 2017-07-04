@@ -16,11 +16,11 @@
 						<?php echo $subscriber['user_full_name']; ?>
 					</a>
 					</div>
-			<div class="location">
+			<div class="location row">
 				  <a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i> Columbia, South Carolina</a>
 			</div>
 				<ul class="user-social-groups">
-					<li><a href="#"><?php echo $subscriber['user_review_count']; ?> reviews</a> </li>
+					<li class="_first"><a href="#"><?php echo $subscriber['user_review_count']; ?> reviews</a> </li>
 					<li><a href="#"><?php echo $subscriber['ser_comment_count']; ?> comments</a></li>
 				</ul>
 			</div>
@@ -52,7 +52,7 @@
 							<?php echo $contributor['user_full_name']; ?>
 						</a>
 						</div>
-				<div class="location"><?php echo (!empty($contributor['associated_companies']) ? 'from '.$contributor['associated_companies'] : ''); ?></div>
+				<div class="location row"><?php echo (!empty($contributor['associated_companies']) ? 'from '.$contributor['associated_companies'] : ''); ?></div>
 					<ul class="user-social-groups">
 						<li><a href="#"><?php echo $contributor['user_comment_count']; ?> comments</a></li>
 					</ul>

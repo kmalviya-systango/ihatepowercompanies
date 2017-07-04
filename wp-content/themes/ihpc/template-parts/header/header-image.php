@@ -17,4 +17,5 @@
 
 	<?php get_template_part( 'template-parts/header/site', 'branding' ); ?>
 
-</div><!-- .custom-header -->
+</div>
+<!-- .custom-header -->

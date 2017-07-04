@@ -136,7 +136,6 @@ jQuery(document).on('submit', '#step3', function(e){
         success: function(response){
         	jQuery("#ajax_loader").hide();
             window.location.href = response;
-            console.log(response);
         }
     });
 });
