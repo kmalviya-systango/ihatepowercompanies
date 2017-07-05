@@ -18,13 +18,13 @@
 				</div>
 				<div class="form-group">
 					<label>Company<span class="req">*</span></label>
-					<input type="text" class="form-control" name="company" placeholder="Company name." required>
+					<input type="text" class="form-control reviewPageCompanies" data-redirect="no" autocomplete="off" name="company" placeholder="Company name." required>
 				</div>
 				<div class="form-group">
 					<label>Product or Service</label>
 					<input type="text" class="form-control" name="product_or_service"  placeholder="Particular model ID, e.g. Bosch SHX43P15.">
 				</div>
-				<div class="form-group">
+				<div id="newCompanyCategory" class="form-group">
 					<label>Category<span class="req">*</span></label>
 					<select name="company_category" class="form-control" required>
 						<?php 
@@ -38,7 +38,7 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label> <input type="checkbox" name="readed_term_of_services" value="1"> I have read and agree to the I Hate Power Companies <a href="#">Terms of Services</a></label>
+					<label> <input type="checkbox" required="required" name="readed_term_of_services" value="1"> I have read and agree to the I Hate Power Companies <a href="#">Terms of Services</a></label>
 				</div>
 				<div class="from-group">
 				<p class="info-text"><small>After submission you will not be able to edit your review. However, we allow adding<br />

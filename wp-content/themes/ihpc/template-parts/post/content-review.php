@@ -11,7 +11,7 @@
  */
 
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class(); ?> >
     <?php
     if ( is_sticky() && is_home() ) :
         echo ihpc_get_svg( array( 'icon' => 'thumb-tack' ) );

@@ -554,15 +554,14 @@ function ihpc_scripts() {
 	wp_enqueue_style( 'checkbox-css', get_theme_file_uri( '/assets/skins/all.css' ), array( 'ihpc-style' ), '1.0' );	
 	wp_enqueue_style( 'Star', get_theme_file_uri( '/assets/themes/fontawesome-stars-o.css' ), array( 'ihpc-style' ), '1.0' );		
 	wp_enqueue_style( 'tags', get_theme_file_uri( '/assets/css/bootstrap-tagsinput.css' ), array( 'ihpc-style' ), '1.0' );		
-	wp_enqueue_style( 'theme-responsive-css', get_theme_file_uri( '/assets/css/responsive_theme.css' ), array( 'ihpc-style' ), '1.0' );
+	wp_enqueue_style( 'theme-responsive-css', get_theme_file_uri( '/assets/css/responsive_theme.css' ), array( 'ihpc-style' ), '1.0' );	
+
 	// Load the html5 shiv.
 	wp_enqueue_script( 'html5', get_theme_file_uri( '/assets/js/html5.js' ), array(), '3.7.3' );
 	wp_script_add_data( 'html5', 'conditional', 'lt IE 9' );
-
 	$ihpc_l10n = array(
 		'quote'  => ihpc_get_svg( array( 'icon' => 'quote-right' ) ),
-	);
-	
+	);	
 	wp_enqueue_script( 'google_map', 'https://maps.googleapis.com/maps/api/js?key='.GOOGLE_KEY.'&libraries=places', array( 'jquery' ), '1.0', true );
 	wp_enqueue_script( 'bootstrap-min', get_theme_file_uri( '/assets/js/bootstrap.min.js' ), array( 'jquery' ), '2.1.2', true );
 	wp_enqueue_script( 'icheck.min', get_theme_file_uri( '/assets/js/icheck.min.js' ), array( 'jquery' ), '2.1.2', true );		
@@ -570,8 +569,9 @@ function ihpc_scripts() {
 	wp_enqueue_script( 'Tags', get_theme_file_uri( '/assets/js/bootstrap-tagsinput.js' ), array( 'jquery' ), '1.0', true );
 	wp_enqueue_script( 'jquery-validations', get_theme_file_uri( '/assets/js/jquery.validate.min.js' ), array( 'jquery' ), '1.0', true );	
 	wp_enqueue_script( 'ihpcscripts', get_theme_file_uri( '/assets/js/ihpcscripts.js' ), array( 'jquery' ), '1.0', true );
+	wp_enqueue_script( 'bootstrap-typehead', get_theme_file_uri( '/assets/js/bootstrap3-typeahead.min.js' ), array( 'jquery','bootstrap-min' ), '2.1.2', true );
 
-	wp_localize_script('ihpcscripts','ihcpvars',array('ihcp_nonce' => wp_create_nonce('ihcp_nonce'), 'ihcp_ajax_url' => admin_url( 'admin-ajax.php' )));
+	wp_localize_script('ihpcscripts','ihcpvars',array('ihcp_nonce' => wp_create_nonce('ihcp_nonce'), 'ihcp_ajax_url' => admin_url( 'admin-ajax.php' ),'site_url' => site_url() ) );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -707,11 +707,11 @@ function home_search_title(){
 	wp_die();
 }
 
+
 //Pre Get posts filter via Ajax
 add_action( 'wp_ajax_archive_company_filter', 'archive_company_filter' );
 add_action( 'wp_ajax_nopriv_archive_company_filter', 'archive_company_filter' );
 function archive_company_filter(){
-
 	echo $_POST;
 	add_filter( 'pre_get_posts', 'my_get_posts' );
 	function my_get_posts( $query ) {
@@ -749,11 +749,24 @@ function ihpc_social_login(){
 * Refer function ihpc_widgets_init();
 ****/
 
+
+
+
 /***
 * Including IHPC required widgets
 ****/
 include_once 'ihpc-widgets/most-active-users.php';
 include_once 'ihpc-widgets/most-active-companies.php';
+include_once 'inc/functions-submit-review.php';
+include_once 'inc/functions-error-messages.php';
+
+require_once('wp_bootstrap_pagination.php');
+function customize_wp_bootstrap_pagination($args) {
+    $args['previous_string'] = 'previous';
+    $args['next_string'] = 'next';
+    return $args;
+}
+add_filter('wp_bootstrap_pagination_defaults', 'customize_wp_bootstrap_pagination');
 
 /***
 * After logout redirect user to home page.
@@ -1164,235 +1177,6 @@ function get_post_by_category($post_type,$offset,$post_per_page,$category_name){
 }
 
 
-
-/*****
-* Functions for 'Write A Review' page
-******/
-//Function for step 1
-add_action('wp_ajax_submit_reivew_form', 'submit_reivew_form');
-add_action('wp_ajax_nopriv_submit_reivew_form', 'submit_reivew_form');
-function submit_reivew_form(){	
-	parse_str($_REQUEST['form_json'], $data);
-	$insertArray 	= array();
-	$insertArray['post_title'] 				= $data['review_title'];
-	$insertArray['post_content'] 			= $data['review_text'];
-	$insertArray['company'] 				= $data['company'];
-    $insertArray['product_or_service'] 		= !empty($data['product_or_service']) ? $data['product_or_service']:'';
-    $insertArray['readed_term_of_services'] = !empty($data['readed_term_of_services']) ? 1:0;    
-    $insertArray['post_status'] 			= 'pending';
-    $insertArray['post_type'] 				= 'review';
-		
-	$review_inserted_id = wp_insert_post($insertArray);
-	if( !empty($review_inserted_id) ){		
-		/****
-		* Checking if company exists or not, 
-		* if company exists then getting its company id 
-		* else creating a new company.
-		****/
-		$cmp_args1 = array(	'posts_per_page' => -1,
-							'post_type' 	 => 'companies',
-							'title' 		 => $insertArray['company']
-						);
-		$companies = get_posts( $cmp_args1 );
-		if( !empty($companies) ){
-			$company 	= $companies[0];
-			$company_id = $company->ID;
-		}
-		else{
-			$company_arg2 = array();
-			$company_arg2['post_title'] 	= $insertArray['company'];
-			$company_arg2['post_status'] 	= 'pending';
-		    $company_arg2['post_type'] 		= 'companies';
-		    $company_arg2['post_category'] 	= array( $data['company_category'] );
-			$company_id = wp_insert_post($company_arg2);			
-		}
-		if(!empty($company_id)){
-			update_post_meta( $review_inserted_id, 'REVIEW_COMPANYID', $company_id);
-		}
-		//END:
-		$photos = $videos = '';
-		//If files are uploaded and post have been created
-		if( !empty($_FILES) && !empty($review_inserted_id) ){
-			foreach ($_FILES as $key => $file) {
-				$file_nonce = $key."_nonce";				
-				$attach_id  = upload_media_to_review_post( $file_nonce, $key, $review_inserted_id );
-				if( !empty($attach_id) ){
-					if( substr($key, 0,9) == 'add_photo' ){
-						$photos .= wp_get_attachment_url( $attach_id )."\n";
-					}
-					if( substr($key, 0,9) == 'add_video' ){
-						$videos .= wp_get_attachment_url( $attach_id )."\n";
-					}	
-				}
-			}
-		}
-		//saving the form fields in post meta
-		update_post_meta( $review_inserted_id, 'review_accepted_terms_conditions', $insertArray['readed_term_of_services'] );
-		update_post_meta( $review_inserted_id, 'review_product_or_service', $insertArray['product_or_service'] );
-		update_post_meta( $review_inserted_id, 'uploaded_photos', $photos );
-		update_post_meta( $review_inserted_id, 'uploaded_videos', $videos );
-		//echo $review_inserted_id;
-		echo $url = site_url()."/submit-review?screen_no=2&reviewId=$review_inserted_id";
-	}
-	else{
-		echo "Review is not created";
-	}
-	exit();
-}
-//Function for step 2
-add_action('wp_ajax_review_additional_form', 'review_additional_form_callback');
-add_action('wp_ajax_nopriv_review_additional_form', 'review_additional_form_callback');
-function review_additional_form_callback(){
-	parse_str($_REQUEST['form_json'],$data);
-	$reviewId = $_REQUEST['reviewId'];	
-	if( !empty($data['ComplaintForm']['full_name']) ){
-		$full_name = $data['ComplaintForm']['full_name'];
-		update_post_meta($reviewId,'_reviewer_full_name',$full_name);
-	}
-	if( !empty($data['ComplaintForm']['personal_email']) ){
-		$personal_email = $data['ComplaintForm']['personal_email'];
-		update_post_meta($reviewId,'_reviewer_email',$personal_email);
-	}	
-	if( !empty($data['ComplaintForm']['personal_phone']) ){
-		$personal_phone = $data['ComplaintForm']['personal_phone'];
-		update_post_meta($reviewId,'_reviewer_phone',$personal_phone);
-	}
-	if( !empty($data['ComplaintForm']['pissedReasonTemp']) ){
-		$pissedReasonTemp = $data['ComplaintForm']['pissedReasonTemp'];
-		update_post_meta($reviewId,'_unhappy_because',$pissedReasonTemp);
-	}
-	if( !empty($data['ComplaintForm']['otherPissedReasonTemp']) ){
-		$otherPissedReasonTemp = $data['ComplaintForm']['otherPissedReasonTemp'];
-		update_post_meta($reviewId,'_unhappy_because_other_reason',$otherPissedReasonTemp);
-	}
-	if( !empty($data['ComplaintForm']['pleasedReasonTemp']) ){
-		$pleasedReasonTemp = $data['ComplaintForm']['pleasedReasonTemp'];
-		update_post_meta($reviewId,'_happy_because',$pleasedReasonTemp);
-	}
-	if( !empty($data['ComplaintForm']['otherPleasedReasonTemp']) ){
-		$otherPleasedReasonTemp = $data['ComplaintForm']['otherPleasedReasonTemp'];
-		update_post_meta($reviewId,'_happy_because_of_other_reason',$otherPleasedReasonTemp);
-	}
-	if( !empty($data['ComplaintForm']['monetary_value']) ){
-		$monetary_value = $data['ComplaintForm']['monetary_value'];
-		update_post_meta($reviewId,'_value_of_loss',$monetary_value);
-	}
-	if( !empty($data['ComplaintForm']['wanted_solution']) ){
-		$wanted_solution = $data['ComplaintForm']['wanted_solution'];
-		update_post_meta($reviewId,'_want',$wanted_solution);
-	}
-	if( !empty($data['ComplaintForm']['other_wanted_solution']) ){
-		$other_wanted_solution 	= $data['ComplaintForm']['other_wanted_solution'];
-		update_post_meta($reviewId,'_want_other_solution',$other_wanted_solution);
-	}
-	if( !empty($data['ComplaintForm']['online_business_location']) ){
-		$online_business_location 	= $data['ComplaintForm']['online_business_location'];
-		update_post_meta($reviewId,'_company_website',$online_business_location);
-	}	
-	echo $url = site_url()."/submit-review?screen_no=3&reviewId=$reviewId";
-	exit();
-}
-
-//Function for step 3
-add_action('wp_ajax_review_location_form', 'review_location_form_callback');
-add_action('wp_ajax_nopriv_review_location_form', 'review_location_form_callback');
-function review_location_form_callback(){
-	parse_str($_REQUEST['form_json'],$data);	
-	$reviewId = $_REQUEST['reviewId'];	
-	if( !empty($data['business-type']) ){
-		$business_type 	= $data['business-type'];
-		update_post_meta($reviewId,'_bussiness_type',$business_type);
-	}
-	if( !empty($data['bussiness-type-url']) ){
-		$business_type_url 	= $data['bussiness-type-url'];
-		update_post_meta($reviewId,'_company_website',$business_type_url);
-	}
-	if( !empty($data['location']) ){
-		$value = $data['location'];
-		$loc = serialize($value);
-		update_field('_review_location', $value, $reviewId);
-		//$location 	= json_encode($data['location']);
-		update_post_meta($reviewId,'_review_location',$loc);
-	}
-	echo $url = site_url()."/submit-review?screen_no=4&reviewId=$reviewId";
-	exit();
-}
-
-//Function for step 4
-add_action('wp_ajax_review_ratting_form', 'review_ratting_form_callback');
-add_action('wp_ajax_nopriv_review_ratting_form', 'review_ratting_form_callback');
-function review_ratting_form_callback(){
-	parse_str($_REQUEST['form_json'],$data);
-	$reviewId = $_REQUEST['reviewId'];
-	if( !empty($data['rating']['location']) ){
-		$location = $data['rating']['location'];
-		update_post_meta($reviewId,'_location',$location);
-	}
-	if( !empty($data['rating']['diversity_of_products']) ){
-		$diversity_of_products = $data['rating']['diversity_of_products'];
-		update_post_meta($reviewId,'_diversity_of_products_or_services',$diversity_of_products);
-	}
-	if( !empty($data['rating']['product_service']) ){
-		$product_service = $data['rating']['product_service'];
-		update_post_meta($reviewId,'_product_or_service_quality',$product_service);
-	}
-	if( !empty($data['rating']['advertised_vs_delivered']) ){
-		$advertised_vs_delivered = $data['rating']['advertised_vs_delivered'];
-		update_post_meta($reviewId,'_advertised_vs_delivered',$advertised_vs_delivered);
-	}
-	if( !empty($data['rating']['website']) ){
-		$website = $data['rating']['website'];
-		update_post_meta($reviewId,'_website',$website);
-	}
-	if( !empty($data['rating']['staff']) ){
-		$staff = $data['rating']['staff'];
-		update_post_meta($reviewId,'_staff',$staff);
-	}
-	if( !empty($data['rating']['price_affordability']) ){
-		$price_affordability = $data['rating']['price_affordability'];
-		update_post_meta($reviewId,'_price_affordability',$price_affordability);
-	}
-	if( !empty($data['rating']['value_of_money']) ){
-		$value_of_money = $data['rating']['value_of_money'];
-		update_post_meta($reviewId,'_value_for_money',$value_of_money);
-	}
-	if( !empty($data['rating']['customer_service']) ){
-		$customer_service = $data['rating']['customer_service'];
-		update_post_meta($reviewId,'_customer_service',$customer_service);
-	}
-	if( !empty($data['rating']['exchange_policy']) ){
-		$exchange_policy = $data['rating']['exchange_policy'];
-		update_post_meta($reviewId,'_exchange_refund_and_cancellation_policy',$exchange_policy);
-	}
-	if( !empty($data['experience']['likes']) ){
-		$likes = $data['experience']['likes'];
-		update_post_meta($reviewId,'_i_liked',$likes);
-	}
-	if( !empty($data['experience']['unlikes']) ){
-		$unlikes = $data['experience']['unlikes'];
-		update_post_meta($reviewId,'_i_did_not_liked',$unlikes);
-	}
-	if( !empty($data['tags']) ){
-		$tags = $data['tags'];
-		update_post_meta($reviewId,'_tags',$tags);
-	}
-	if( !empty($data['companies_consider']) ){
-		$companies_consider = $data['companies_consider'];
-		update_post_meta($reviewId,'_what_were_other_companies_you_considered',$companies_consider);
-	}
-	//If user is logged in then assigning this review to that user and redirect to thank you page.
-	if( is_user_logged_in() ){
-		$user_id = get_current_user_id();
-		wp_update_post( array('ID' => $reviewId,'post_author' => $user_id) );
-		echo $url = site_url('submit-review?success=true&msg=3'); 
-	}
-	else{
-		echo $url = site_url("signup-and-login?success=true&msg=4&reviewId=$reviewId");
-	}	
-	exit();
-}
-
-
 //$_POST['add_photo_nonce']
 function upload_media_to_review_post( $nonce, $file_name, $post_id ) {
 	//if ( isset( $nonce ) && wp_verify_nonce( $nonce, $file_name ) ) {
@@ -1448,14 +1232,6 @@ function ihpc_get_users( $role = array('Subscriber') ){
 		return $array;
 	}
 }
-
-require_once('wp_bootstrap_pagination.php');
-function customize_wp_bootstrap_pagination($args) {
-    $args['previous_string'] = 'previous';
-    $args['next_string'] = 'next';
-    return $args;
-}
-add_filter('wp_bootstrap_pagination_defaults', 'customize_wp_bootstrap_pagination');
 
 /****
 * This function will return all the information related to the company
@@ -1618,7 +1394,7 @@ function ihpc_comment($comment, $args, $depth){
         $add_below = 'div-comment';
     }
     ?>
-    <<?php echo $tag ?> <?php comment_class( empty( $args['has_children'] ) ? '' : 'parent' ) ?> id="comment-<?php comment_ID() ?>">
+    <<?php echo $tag ?> <?php comment_class( empty( $args['has_children'] ) ? '' : 'parent' ) ?> id="comment-<?php comment_ID() ?>" >
     <?php if ( 'div' != $args['style'] ) : ?>
         <div id="div-comment-<?php comment_ID() ?>" class="comment-body">
     <?php endif; ?>
@@ -1655,60 +1431,17 @@ function ihpc_comment($comment, $args, $depth){
     <?php
 }
 
-/****
-* This function doesnot return anything and just display the message.
-****/
-function ihpc_errors_display(){
-	if( !empty($_GET['success']) && ($_GET['success'] == 'true') ){
-		$smsg = $_GET['msg'];
-		switch ($smsg) {
-			case 1:
-				$smsg = "You have successfully registered now, please login to continue"; 
-			break;
-			case 2:
-				$smsg = "We have sent a link to your registered email id, please set your password through it"; 
-			break;
-			case 3:
-				$smsg = "Thanks, for submitting your review we will check and publish it shortly"; 
-			break;
-			case 4:
-				$smsg = "Thanks, for submitting your review please sign up or log in to keep track of your submitted review"; 
-			break;
-			case 5:
-				$smsg = "You have successfully registered now, #$_GET[reviewId] This is your review number. Please refer to it when communicating with the company."; 
-			break;
-		}  
-		echo "<div style='margin-bottom:0' class='alert alert-info text-center'>$smsg</div>";
-	}
-	elseif( !empty($_GET['success']) && ($_GET['success'] == 'false')){
-		$smsg = $_GET['msg'];
-		switch ($smsg) {
-			case 1:
-				$smsg = "Either your username or email is already present"; 
-			break;
-			case 2:
-				$smsg = "Invalid Captcha"; 
-			break;
-			case 3:
-				$smsg = "Password and confirm password are not same"; 
-			break;
-			case 4:
-				$smsg = "Password is incorrect"; 
-			break;
-			case 'existing_user_login':
-				$smsg = "Sorry, that company name or email already exists!"; 
-			break;
-		} 
-		echo "<div style='margin-bottom:0' class='alert alert-danger text-center'>$smsg</div>";
-	}
-}
-
 /***
 * Getting the current page url with query string
 ****/
 function get_current_page_url() {
   global $wp;
   return add_query_arg( $_SERVER['QUERY_STRING'], '', home_url( $wp->request ) );
+}
+
+function get_current_url() {
+  global $wp;
+  return home_url( $wp->request );
 }
 
 /***
@@ -1791,4 +1524,112 @@ function register_user_callback(){
 	$userdata['user_login'] = $_POST['user_readed_tc'];
 	$userdata['user_login'] = $_POST['captcha_code'];
 	$userdata['user_login'] = $_POST['captcha_prefix'];*/			
+}
+
+function get_company_search_box(){
+	$searchBox ='<div class="search-for-car clearfix">
+					<div class="inner-search">
+						<div class="">
+							<input required="required" autocomplete="off" data-redirect="yes" name="company_name" id="search-company" class="form-control search-input width-100 typeaheadCompanies" placeholder="Company Name" type="text">
+						</div>
+					</div>
+					<input value="" class="btn-style inner-search-button" type="submit">
+				</div>';
+	return 	$searchBox;
+}
+
+/****
+* WP auto search by company name
+****/
+add_action( 'wp_ajax_search_company', 'search_company_callback' );
+add_action( 'wp_ajax_nopriv_search_company', 'search_company_callback' );
+function search_company_callback() {
+	$term = strtolower( $_GET['term'] );
+	global $wpdb;
+	$companyNameSql = "select ID from $wpdb->posts where post_title LIKE '%$term%' ";
+	$mypostids 		= $wpdb->get_col($companyNameSql);	
+	$search_args 	= array( 'post_type'	=> 'companies' );
+	if( !empty($mypostids) ){
+		foreach ($mypostids as $key => $ids) {
+			$search_args['post__in'][] = $ids;
+		}
+	}	
+	$array = array();
+	$i = 0;
+	$the_query = new WP_Query( $search_args );
+	if ( $the_query->have_posts() ) {		
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			$array[$i]['id'] 	= get_the_ID();
+			$array[$i]['url'] 	= get_permalink();
+			$array[$i]['name'] 	= get_the_title();
+			$array[$i]['date'] 	= get_the_date();
+			$i++;	
+		}
+		wp_reset_postdata();
+	}	
+	$response = json_encode( $array );
+	echo $response;
+	exit();
+}
+
+
+function ihpc_get_post($post_type,$post_per_page){
+	$args = array(	'post_type' => $post_type,
+					'posts_per_page' => $post_per_page
+				);
+	$the_query 	= new WP_Query( $args );
+	$array 		= array();
+	$i = 0;
+	// The Loop
+	if ( $the_query->have_posts() ) {
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			$post_id = get_the_ID();
+			$array[$i]['id'] 		= get_the_ID();
+			$array[$i]['title'] 	= get_the_title();
+			/*$array[$i]['excerpt'] 	= get_the_excerpt();
+			$array[$i]['content'] 	= get_the_content();
+			$array[$i]['permalink'] = get_permalink();
+			$array[$i]['date'] 		= get_the_date();
+			$array[$i]['img'] = get_the_post_thumbnail_url(get_the_ID(),'medium');*/
+			$tags = get_the_terms( $post_id, 'post_tag');
+			if( !empty($tags)	){
+				foreach ($tags as $key => $tag) {
+					$array[$i]['terms'][] = $tag;
+				}
+			}
+			$i++;
+		}
+		/* Restore original Post Data */
+		wp_reset_postdata();
+		return $array;
+	} 
+	else {
+		return $array;
+	}
+}
+
+/****
+* WP auto search by review tags
+****/
+add_action( 'wp_ajax_search_review_tags', 'search_review_tags_callback' );
+add_action( 'wp_ajax_nopriv_search_review_tags', 'search_review_tags_callback' );
+function search_review_tags_callback() {
+	$terms = ihpc_get_post('review',-1);
+	$array = array();
+    if( !empty($terms) ){
+    	foreach ($terms as $i => $term) {
+    		if( !empty($term['terms']) ){
+    			foreach ($term['terms'] as $j => $obj) {
+    				$array[$i]['id'] 	= $obj->term_id;
+					$array[$i]['name'] 	= $obj->name;
+					$array[$i]['count'] = $obj->count;
+					$i++;
+        		}
+    		}
+    	}    	
+    }    
+    echo json_encode($array);
+    exit();
 }

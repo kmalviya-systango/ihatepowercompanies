@@ -1,6 +1,6 @@
-/**
- * All Scripts and functions
- */
+/*
+* All Scripts and functions
+*/
 
 
 jQuery( document ).ready(function() {
@@ -31,7 +31,44 @@ jQuery( document ).ready(function() {
         jQuery(this).next().next().toggleClass('hidden');
     });
 
-    initAutocomplete();
+    initAutocomplete();    
+
+    //Jquery auto complete for companies
+    //https://github.com/bassjobsen/Bootstrap-3-Typeahead
+    jQuery.get(ihcpvars.ihcp_ajax_url+"?action=search_company", function(data){
+        jQuery(".typeaheadCompanies").typeahead({ 
+            source:data,
+            minLength:1,
+            fitToElement:1,
+            showHintOnFocus:"all",
+            afterSelect: function(item){
+                console.log(item);
+                window.location.href = item.url;
+            }
+        });
+        jQuery(".reviewPageCompanies").typeahead({ 
+            source:data,
+            minLength:1,
+            fitToElement:1,
+            showHintOnFocus:"all",
+            afterSelect: function(item){
+                jQuery("#newCompanyCategory").hide();
+            }
+        });
+    },'json');
+
+    jQuery(".reviewTags").tagsinput({
+        typeahead: {
+            source: function(query) {
+                return jQuery.get(ihcpvars.ihcp_ajax_url+"?action=search_review_tags");
+            },
+            afterSelect: function(item){
+                var redirct = jQuery(".reviewTags").attr("data-redirect");
+                window.location.href = redirct+"?tag="+item;
+                // /console.log(item);                
+            }
+        }
+    });
 
 });
 
@@ -395,6 +432,3 @@ function geolocate() {
         });
     }
 }
-/***
-* END
-***/

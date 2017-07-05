@@ -10,32 +10,64 @@
  * @version 1.0
  */
 
-get_header(); ?>
+get_header(); 
+
+/***
+* If filter by address
+***/
+if( !empty($_REQUEST['location']['address']) ){	
+	global $wpdb;
+	$address = $_REQUEST['location']['address'];
+	$tableName = $wpdb->prefix."postmeta";
+	$sql 	 = "SELECT * FROM $tableName WHERE meta_value like '%$address%' AND meta_key = '_review_location' ";
+	$postIds = $wpdb->get_results($sql,ARRAY_A);
+	if( !empty($postIds) ){
+		$search_args = array( 'post_type' => 'review' );
+		foreach ($postIds as $key => $id) {
+			if( $id['meta_value'] != '' ){
+				$search_args['post__in'][] = $id['post_id'];
+				//$GLOBALS['wp_query']->query_vars['post__in'][] = $id['post_id'];
+			}			
+		}
+		$GLOBALS['wp_query'] = new WP_Query( $search_args );		
+	}		
+}
+
+/***
+* If filter by comment count
+***/
+if( !empty($_REQUEST['recently']) ){
+	$search_args = array( 'post_type' => 'review', 'orderby' => 'comment_count', 'order'   => 'DESC' );
+	$GLOBALS['wp_query'] = new WP_Query( $search_args );
+}
+
+/***
+* If filter by tag
+***/
+if( !empty($_REQUEST['tag']) ){
+	$tag = esc_attr($_REQUEST['tag']);
+	$search_args = array( 'post_type' => 'review', 'tag' => $tag );
+	$GLOBALS['wp_query'] = new WP_Query( $search_args );
+}
+
+?>
+
 <div class="col-lg-9">
 	<div class="wrap" id="review_page">
-		<?php if ( have_posts() ) : ?>
-			<header class="page-header">
-				<h1>Browse Complaints and Reviews</h1>
-			</header><!-- .page-header -->
-		<?php endif; ?>
+		<header class="page-header">
+			<h1>Browse Complaints and Reviews</h1>
+		</header><!-- .page-header -->
 		<div class="search-box ">
 			<form action="" method="post" class="clearfix">
-				<div class="search-for-car clearfix">
-					<div class="inner-search">
-						<div class="col-lg-12 col-md-12  col-sm-12 col-xs-12">
-							<input required="required" name="company_name" id="company_name" class="form-control search-input width-100" placeholder="Company Name" type="text">
-						</div>
-					</div>
-					<input value="" class="btn-style inner-search-button " type="submit">
-				</div>
+				<?php echo get_company_search_box() ?>
 				<div class="parameters">
                     <ul class="list-inline" style="display: block;">
-						<li><span class="icon icon-company">Company</span></li>
-						<li><span class="icon icon-location">Location</span></li>
-						<li><span class="icon icon-category">Category</span></li>
-						<li><span class="icon icon-tag">Tag</span></li>
-						<li><span class="icon icon-comments">Recently<br> discussed</li>
-						<li><span class="icon icon-image">With media</span></li>
+						<li><a data-toggle="modal" data-target="#choose-company"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Company</a></li>
+						<li><a data-toggle="modal" data-target="#choose-location"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Location</a></li>
+						<li><a data-toggle="modal" data-target="#choose-category"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/categories.png">Category</a></li>
+						<li><a data-toggle="modal" data-target="#choose-tag"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Tag</a></li>
+						<li><a href="<?php echo get_current_url() ?>?recently=1"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Recently discussed</a></li>
+						<li><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">With media</li>
 					</ul>
                 </div>
 			</form>
@@ -44,8 +76,7 @@ get_header(); ?>
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main" role="main">
 			<?php
-			if ( have_posts() ) : ?>
-				<?php
+			if ( have_posts() ) :
 				/* Start the Loop */
 				while ( have_posts() ) : the_post();
 					/*
@@ -70,4 +101,14 @@ get_header(); ?>
 	<?php get_sidebar('sidebar-1'); ?>
 </div>
 
-<?php get_footer(); ?>
+<?php 
+//Including the category modal
+include_once "inc/modals/company_categories.php";
+//Including the location modal
+include_once "inc/modals/location.php";
+//Including the location modal
+include_once "inc/modals/companies.php";
+//Including the location modal
+include_once "inc/modals/tags.php";
+
+get_footer(); ?>
