@@ -80,3 +80,10 @@ Styles based on Normalize v5.0.0 @link https://github.com/necolas/normalize.css
     right: 0;
     text-align: center;
 }
+.pac-container{
+  z-index: 9999999999;
+}
+
+.open{
+  color: #000000;
+}

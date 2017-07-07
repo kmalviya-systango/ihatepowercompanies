@@ -29,40 +29,21 @@ if( !empty($_REQUEST['category_filter']) ){
 											'operator'=>'IN')
 									);
 }
-if( !empty($_REQUEST['location']['address']) ){	
-	global $wpdb;
-	$address = $_REQUEST['location']['address'];
-	$tableName = $wpdb->prefix."postmeta";
-	$sql 	 = "SELECT * FROM $tableName WHERE meta_value like '%$address%' AND meta_key = 'company_location' ";
-	$postIds = $wpdb->get_results($sql,ARRAY_A);
-	if( !empty($postIds) ){
-		foreach ($postIds as $key => $id) {
-			if( $id['meta_value'] != '' ){
-				$searchedId[] = $id['post_id'];
-			}			
-		}		
+
+if( !empty($_REQUEST['location']['address']) ){
+	$ids = get_post_by_location( $_REQUEST['location']['address'], 'company_location' );
+	if( $ids == 'No result found' ){
+		$search_args['author_name'] = $ids;;
+	}
+	else{
+		$searchedId = $ids;
 	}	
-	/*$search_args['meta_query'] = array( 
-										array(	'key' => 'company_location',
-												'value' => maybe_serialize($_REQUEST['location']),
-												'Compare' => '=' 
-												)
-									);*/
-	//$search_args['meta_key'] 	= 'company_location';
-	//$search_args['meta_value'] = serialize($_REQUEST['location']);	
 }
+
 if( !empty($_REQUEST['company_name']) ){
-	global $wpdb;
-	$companyNameSql = "select ID from $wpdb->posts where post_title LIKE '%".$_REQUEST['company_name']."%' ";
-	$mypostids = $wpdb->get_col($companyNameSql);
-	//$search_args['title'] 	= $_REQUEST['company_name'];
-	if( !empty($mypostids) ){
-		foreach ($mypostids as $key => $ids) {
-			$searchedId[] = $ids;
-		}
-	}	
-	//$search_args['post__in'] = $mypostids;
+	$search_args['s'] = $_REQUEST['company_name'];
 }
+
 if( !empty($_REQUEST['category_filter']) || !empty($_REQUEST['location']) || !empty($_REQUEST['company_name']) ){
 	if( !empty($searchedId) ){
 		$search_args['post__in'] = $searchedId;
@@ -79,30 +60,29 @@ echo "</pre>";*/
 	<?php if ( have_posts() ) : ?>
 		<h1>Browse Companies</h1>
 	<?php endif; ?>
-
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="search-box ">
 				<?php $companycount = $GLOBALS['wp_query']->post_count; ?>
-				<label>All companies <?php echo $companycount; ?> </label>
-				<form action="" method="post" class="clearfix">
-					<div class="search-for-car clearfix">
-						<div class="inner-search">
-							<div class="col-lg-12 col-md-12  col-sm-12 col-xs-12">
-								<input required="required" name="company_name" id="company_name" class="form-control search-input width-100" placeholder="Company Name" type="text" />
-							</div>
-						</div>
-						<input value="" class="btn-style inner-search-button " type="submit" data-toggle="modal" data-target="#reviews-by-location" />
-					</div>
+				<label>All companies <?php echo $companycount; ?> </label>				
+				<form action="<?php echo get_current_url() ?>" method="post" class="clearfix">
+					<?php echo get_company_search_box( 'false' ) ?>
 				</form>
 			</div>
 			<div class="clearfix"></div>
 			<strong class="red_bold">Most complained about</strong>
 			<div class="sorting">
-				<div class="col-sm-3 col-md-2"><a href="<?php echo site_url('companies?orderBy=alpha') ?>"><span>A-Z</span></a></div>
+				<div class="col-sm-3 col-md-2"><a data-target="#letters" id="toggleElement"><span>A-Z</span></a></div>
 				<div class="col-sm-3 col-md-2"><a data-toggle="modal" data-target="#choose-location"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Location</a></div>
 				<div class="col-sm-3 col-md-2"><a data-toggle="modal" data-target="#choose-category"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/categories.png"> Category</a></div>
 				<div class="clearfix"></div>
+			</div>
+			<div id="letters" style="display:none" class="col-md-12 alfa-list">
+				<?php
+				foreach (range('A', 'Z') as $char) {
+				    echo "<a class='company_by_letter'>".$char."</a>";
+				}
+				?>
 			</div>
 		</div>
 	</div>

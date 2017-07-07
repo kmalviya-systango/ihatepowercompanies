@@ -77,7 +77,7 @@ else{
       <div class="search-for-car clearfix">
         <div class="inner-search">
           <div class="col-lg-4 col-md-4 separator col-sm-4 col-xs-12">
-            <input name="company_name" id="company_name" class="form-control search-input width-100" placeholder="Company Name" value="" type="text">
+            <input name="company_name" id="company_name" autocomplete="off" data-redirect="no" class="reviewPageCompanies form-control search-input width-100" placeholder="Company Name" value="" type="text">
           </div>
           <div class="col-lg-4 col-md-4 separator model-select col-sm-4 col-xs-12">
             <!-- Google auto complete address: Start -->

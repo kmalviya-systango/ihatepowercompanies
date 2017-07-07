@@ -699,13 +699,13 @@ if ( !isset( $redux_demo ) && file_exists( dirname( __FILE__ ) . '/admin/options
 require_once(dirname( __FILE__ ).'/post-types/postregister.php');
 
 
-add_action( 'wp_ajax_home_search_title', 'home_search_title' );
+/*add_action( 'wp_ajax_home_search_title', 'home_search_title' );
 add_action( 'wp_ajax_nopriv_home_search_title', 'home_search_title' );
 function home_search_title(){
 	print_r($_POST);
 
 	wp_die();
-}
+}*/
 
 
 //Pre Get posts filter via Ajax
@@ -993,11 +993,20 @@ function get_companies($number_of_companies){
 	if ( $the_query->have_posts() ) {		
 		while ( $the_query->have_posts() ) {
 			$the_query->the_post();
-			$array[$i]['url'] 			= get_permalink();
-			$array[$i]['title'] 		= get_the_title();
-			$array[$i]['date'] 			= get_the_date();
+			$post_id = get_the_ID();
+			$array[$i]['url'] 	= get_permalink();
+			$array[$i]['title'] = get_the_title();
+			$array[$i]['date'] 	= get_the_date();
+			$array[$i]['reviews'] = get_company_reviews($post_id);
+			$tags = get_the_terms( $post_id, 'companiestax');
+			if( !empty($tags)	){
+				foreach ($tags as $key => $tag) {
+					$array[$i]['terms'][] = $tag;
+				}
+			}
 			$i++;	
 		}
+		wp_reset_postdata();
 	}
 	return $array;
 }
@@ -1438,7 +1447,7 @@ function register_user_callback(){
 	}
 	else{
 		$redirectUrl = site_url('sign-up');
-		header("Location:$redirectUrl?success=false&$msg=1");
+		header("Location:$redirectUrl?success=false&msg=1");
 	}
 	/*$userdata['user_login'] = $_POST['user_cpassword'];
 	$userdata['user_login'] = $_POST['user_phonenumber'];
@@ -1447,12 +1456,16 @@ function register_user_callback(){
 	$userdata['user_login'] = $_POST['captcha_prefix'];*/			
 }
 
-function get_company_search_box(){
+function get_company_search_box( $searchOnSelect = 'true' ){
+	if( $searchOnSelect == 'false' ){
+		$input = '<input required="required" autocomplete="off" data-redirect="no" name="company_name" id="search-company" class="form-control search-input width-100 reviewPageCompanies" placeholder="Company Name" type="text">';
+	}
+	else{
+		$input = '<input required="required" autocomplete="off" data-redirect="yes" name="company_name" id="search-company" class="form-control search-input width-100 typeaheadCompanies" placeholder="Company Name" type="text">';
+	}
 	$searchBox ='<div class="search-for-car clearfix">
 					<div class="inner-search">
-						<div class="">
-							<input required="required" autocomplete="off" data-redirect="yes" name="company_name" id="search-company" class="form-control search-input width-100 typeaheadCompanies" placeholder="Company Name" type="text">
-						</div>
+						<div class="">'.$input.'</div>
 					</div>
 					<input value="" class="btn-style inner-search-button" type="submit">
 				</div>';
@@ -1462,18 +1475,44 @@ function get_company_search_box(){
 /****
 * WP auto search by company name
 ****/
+function get_companies_by_title( $company_name ){
+	global $wpdb;
+	$companyNameSql = "select ID from $wpdb->posts where post_title LIKE '%".$company_name."%' AND post_type = 'companies' AND post_status = 'publish' ";
+	$mypostids 		= $wpdb->get_col($companyNameSql);
+	$searchedId 	= array();
+	if( !empty($mypostids) ){
+		foreach ($mypostids as $key => $ids) {
+			$searchedId[] = $ids;
+		}
+	}
+	return $searchedId;
+}
+
+function get_post_by_location( $address, $metakey ){
+	global $wpdb;
+	$tableName = $wpdb->prefix."postmeta";
+	$sql 	 = "SELECT * FROM $tableName WHERE meta_value like '%$address%' AND meta_key = '$metakey' AND meta_value != '' ";
+	$postIds = $wpdb->get_results($sql,ARRAY_A);
+	$searchedId = array();
+	if( !empty($postIds) ){
+		foreach ($postIds as $key => $id) {
+			$searchedId[] = $id['post_id'];
+		}
+		return $searchedId;
+	}
+	else{
+		return 'No result found';
+	}
+}
+
 add_action( 'wp_ajax_search_company', 'search_company_callback' );
 add_action( 'wp_ajax_nopriv_search_company', 'search_company_callback' );
 function search_company_callback() {
-	$term = strtolower( $_GET['term'] );
-	global $wpdb;
-	$companyNameSql = "select ID from $wpdb->posts where post_title LIKE '%$term%' ";
-	$mypostids 		= $wpdb->get_col($companyNameSql);	
-	$search_args 	= array( 'post_type'	=> 'companies' );
-	if( !empty($mypostids) ){
-		foreach ($mypostids as $key => $ids) {
-			$search_args['post__in'][] = $ids;
-		}
+	$term 			= 	strtolower( $_GET['term'] );
+	$ids  			= 	get_companies_by_title( $term );
+	$search_args 	= 	array('post_type'=>'companies');
+	if( !empty($ids) ){
+		$search_args['post__in'] = $ids;
 	}	
 	$array = array();
 	$i = 0;
@@ -1554,3 +1593,86 @@ function search_review_tags_callback() {
     echo json_encode($array);
     exit();
 }
+
+add_action( 'wp_ajax_get_company_by_letter', 'get_company_by_letter_callback' );
+add_action( 'wp_ajax_nopriv_get_company_by_letter', 'get_company_by_letter_callback' );
+function get_company_by_letter_callback(){
+	$companies 	= get_companies(-1);	
+	$retType 	= $_REQUEST['retType'];
+	$letter 	= $_REQUEST['letter'];
+	$letter 	= ucfirst($letter);
+	$filterCompanies 	= array();
+	foreach ($companies as $key => $company) {		
+		$title = substr($company['title'], 0,1);
+		$first_char = ucfirst($title);		
+		if($letter == $first_char){
+			$filterCompanies[] = $company;
+		}
+	}
+	
+	if($retType == 'html'){
+		if( !empty($filterCompanies) ){
+			foreach ($filterCompanies as $key => $company) : ?>
+				<div class='col-md-4'>
+					<div>
+						<a href='<?php echo $company['url'] ?>'><?php echo $company['title'] ?></a>
+						<span><?php echo count($company['reviews']) ?></span>
+					</div>
+					<?php 
+						if( !empty($company['terms']) ){							
+							foreach ($company['terms'] as $key => $term) {
+								echo "<small>$term->name </small>";								
+							}
+						}
+					?>
+				</div>
+			<?php
+			endforeach;
+		}
+		else{
+			echo "<div class='col-md-12'>No companies found</div>";
+		}
+	}	
+	exit();
+}
+
+/****
+* When a review is published, then update its relevant company ratting and send email to post author
+****/
+function review_published_notification( $ID, $post ) {
+    /*$author 	= $post->post_author;
+    $name 		= get_the_author_meta( 'display_name', $author );
+    $email 		= get_the_author_meta( 'user_email', $author );
+    $title 		= $post->post_title;
+    $permalink 	= get_permalink( $ID );
+    $edit 		= get_edit_post_link( $ID, '' );
+    $to[] 		= sprintf( '%s <%s>', $name, $email );
+    $subject 	= sprintf( 'Published: %s', $title );
+    $message 	= sprintf ('Congratulations, %s! Your review “%s” has been published.' . "\n\n", $name, $title );
+    $message 	.= sprintf( 'View: %s', $permalink );
+    $headers[] 	= '';
+    wp_mail( $to, $subject, $message, $headers );*/
+    //Getting all reviews for associated company and after calculation updating its ratings average field
+    $companyId 	 = get_post_meta($ID,'REVIEW_COMPANYID',true);
+    $companydata = get_company_review($companyId);
+    $newRatting  = $companydata['calculations']['star_ratting'];
+    update_post_meta( $companyId, 'ratings_average', $newRatting );
+}
+add_action( 'publish_review', 'review_published_notification', 10, 2 );
+
+
+/****
+* Adding css for admin area
+****/
+function admin_head_css() {
+	if( !is_admin() ){
+		echo '<style>
+		#acf-activity_rank,
+		#acf-associated_company
+		{
+			display: none !important;
+		}
+		</style>';
+	}	
+}
+add_action( 'admin_head', 'admin_head_css' );

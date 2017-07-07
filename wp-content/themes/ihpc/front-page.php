@@ -66,7 +66,7 @@ get_header(); ?>
 			<div class="col-md-12">
 				<div class="mhpc-home">
 					<h1>Most hated power companies</h1>
-				</div>			
+				</div>
 				<div class="row">
 					<?php
 					//Getting posts of this week: Start

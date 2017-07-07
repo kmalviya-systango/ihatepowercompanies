@@ -79,7 +79,10 @@
     <div class="col-md-10 col-md-offset-2 customer_list_footer">
         <div class="col-sm-1 text-center c_l_f_resolved"> <strong>23</strong> Issues<br>
             Resolved </div>
-        <div class="col-sm-1 text-center c_l_f_reviews"> <?php echo get_company_reviews( get_the_ID() ) ?>
+        <div class="col-sm-1 text-center c_l_f_reviews"> <?php 
+        $reviews = get_company_reviews( get_the_ID() ) ;
+        echo count($reviews);        
+        ?>
             Reviews </div>
         <div class="col-sm-1 text-center c_l_f_losses"> $
             <?php 

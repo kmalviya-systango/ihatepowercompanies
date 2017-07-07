@@ -1,8 +1,6 @@
 /*
 * All Scripts and functions
 */
-
-
 jQuery( document ).ready(function() {
 	//Adding class to hottopics
     jQuery('#_hottopics').prev().addClass('_hottopics');
@@ -70,6 +68,27 @@ jQuery( document ).ready(function() {
         }
     });
 
+    jQuery("#toggleElement").on("click",function(){
+        var element = jQuery(this).attr("data-target");
+        jQuery(this).toggleClass("open");
+        jQuery(element).slideToggle('500','linear');
+    });
+    //For companies page ajax call by letters
+    jQuery(".company_by_letter").on("click",function(){
+        jQuery.ajax({
+            url: ihcpvars.ihcp_ajax_url,
+            data: {
+                letter: jQuery(this).text(),
+                action: 'get_company_by_letter',
+                retType: 'html'
+            },
+            method: 'post',
+            success: function(result){
+                jQuery("#main").html(result);
+            }
+        });
+    });
+
 });
 
 jQuery(window).load(function(){							 
@@ -90,7 +109,7 @@ jQuery(window).load(function(){
 
     //Home page search ajax company list
     //jQuery("#company_name").bind("keyup change", function(e) {
-    jQuery("#company_name").bind("keyup", function(e) {
+    /*jQuery("#company_name").bind("keyup", function(e) {
         var s_companyname = jQuery(this).val();
         jQuery.post(
             ajaxurl,
@@ -103,7 +122,7 @@ jQuery(window).load(function(){
             }
         );
         console.log(s_companyname);
-    });
+    });*/
 	
 
 	jQuery( "._unhappy .iCheck-helper" ).bind( "click", function() {

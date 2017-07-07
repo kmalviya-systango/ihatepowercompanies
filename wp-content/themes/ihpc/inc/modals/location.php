@@ -11,11 +11,22 @@
 	        </div>
 	        <div class="modal-body row">
 	        	<div class="col-md-12">
-	        		<!-- Google auto complete address: Start -->
-		            <input onFocus="geolocate()" id="autocomplete" name="location[address]" class="form-control search-input width-100" placeholder="Location" value="" type="text">
-		            <input type="hidden" id="glat" name="location[lat]" value="" />
-		            <input type="hidden" id="glong" name="location[lng]" value="" />
-		            <!-- Google auto complete address: End -->	
+
+	        		<form action="<?php echo get_current_url() ?>" method="post">
+		        		<div class="search-for-car clearfix">
+							<div class="inner-search">
+								<div class="">
+									<!-- Google auto complete address: Start -->
+						            <input onFocus="geolocate()" id="autocomplete" name="location[address]" class="form-control search-input width-100" placeholder="Location" value="" type="text">
+						            <input type="hidden" id="glat" name="location[lat]" value="" />
+						            <input type="hidden" id="glong" name="location[lng]" value="" />
+						            <!-- Google auto complete address: End -->										
+								</div>
+							</div>
+							<input value="" class="btn-style inner-search-button" type="submit">
+						</div>
+					</form>
+					
 		            <?php 
 		            $locations = get_locations('companies'); 
 		            if( !empty($locations) ){

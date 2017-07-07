@@ -15,22 +15,16 @@ get_header();
 /***
 * If filter by address
 ***/
-if( !empty($_REQUEST['location']['address']) ){	
-	global $wpdb;
-	$address = $_REQUEST['location']['address'];
-	$tableName = $wpdb->prefix."postmeta";
-	$sql 	 = "SELECT * FROM $tableName WHERE meta_value like '%$address%' AND meta_key = '_review_location' ";
-	$postIds = $wpdb->get_results($sql,ARRAY_A);
-	if( !empty($postIds) ){
-		$search_args = array( 'post_type' => 'review' );
-		foreach ($postIds as $key => $id) {
-			if( $id['meta_value'] != '' ){
-				$search_args['post__in'][] = $id['post_id'];
-				//$GLOBALS['wp_query']->query_vars['post__in'][] = $id['post_id'];
-			}			
-		}
-		$GLOBALS['wp_query'] = new WP_Query( $search_args );		
-	}		
+if( !empty($_REQUEST['location']['address']) ){
+	$search_args = array( 'post_type' => 'review' );
+	$ids = get_post_by_location( $_REQUEST['location']['address'], '_review_location' );
+	if( $ids == 'No result found' ){
+		$search_args['author_name'] = $ids;
+	}
+	else{
+		$search_args['post__in'] = $ids;
+	}
+	$GLOBALS['wp_query'] = new WP_Query( $search_args );
 }
 
 /***
@@ -49,7 +43,6 @@ if( !empty($_REQUEST['tag']) ){
 	$search_args = array( 'post_type' => 'review', 'tag' => $tag );
 	$GLOBALS['wp_query'] = new WP_Query( $search_args );
 }
-
 ?>
 
 <div class="col-lg-9">
