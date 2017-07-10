@@ -1676,3 +1676,29 @@ function admin_head_css() {
 	}	
 }
 add_action( 'admin_head', 'admin_head_css' );
+
+
+
+function show_stars($ratings){	
+	if( !empty($ratings) ){
+		$ratings = round($ratings);
+		return '<select data-initialRating="'.$company['ihpc_ratings'].'" class="showRatting">
+				<option '.( ($ratings == 1) ? 'selected="selected"' : "" ).' value="1">1</option>
+				<option '.( ($ratings == 2) ? 'selected="selected"' : "" ).' value="2">2</option>
+				<option '.( ($ratings == 3) ? 'selected="selected"' : "" ).' value="3">3</option>
+				<option '.( ($ratings == 4) ? 'selected="selected"' : "" ).' value="4">4</option>
+				<option '.( ($ratings == 5) ? 'selected="selected"' : "" ).' value="5">5</option>
+			</select><span>'.$ratings.'</span>';	
+	}
+	else{
+		$ratings = 0;
+		return '<select data-initialRating="'.$company['ihpc_ratings'].'" class="showRatting">
+				<option value="0">0</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</select><span>'.$ratings.'</span>';
+	}	
+}

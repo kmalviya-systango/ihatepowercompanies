@@ -62,7 +62,7 @@ get_header(); ?>
 									if( !empty($rattings['rattings']) ){
 										$rates = $rattings['rattings'];
 										foreach ($rates as $meta_key => $meta_value) {
-											echo "<div><span>$meta_key </span>$meta_value stars</div>";
+											echo "<div><span>$meta_key </span>".show_stars($meta_value)."</div>";
 										}
 									}
 									if( !empty($rattings['losses']) ){

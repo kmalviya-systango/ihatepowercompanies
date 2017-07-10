@@ -9,29 +9,27 @@
 		<div class="row">
      		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 contact-box">		
                <h2 class="title-p-2">Where It Happened?</h2>
-				<label for="offline-business"><input name="business-type" value="offline-bussiness-map" checked="checked" type="radio"> Offline business</label>
-				<label for="offline-business" class="ml-10"><input name="business-type" value="online-bussiness-url" type="radio"> Online business</label>
-				<div class="clearfix"></div>
-				<div class="offline-bussiness-map custom-url-box">
-					<p class="hint">Choose company's location from the list or click on a marker.</p>					
-			        <div class="row">
+				<label for="offline-business"><input name="business-type" data-target="offlineBussiness" value="offline-bussiness" checked="checked" class="displayToggle" type="radio"> Offline business</label>
+				<label for="offline-business" class="ml-10"><input name="business-type" data-target="onlineBussiness" value="online-bussiness" class="displayToggle" type="radio"> Online business</label>
+				<div class="clearfix"></div>				
+				<div id="onlineBussiness" style="display:none" class="hideTmp online-bussiness-url-url-box">
+    				<div class="col-sm-6">
+    				    <div class="form-group row">
+    					  <label for="exampleInputUrl1">Site URL</label>
+    					  <input type="url" name="bussiness-type-url" class="form-control" id="exampleInputUrl1" placeholder="Please enter your site url">
+    					</div>
+    				</div>	
+				</div>
+                <div id="offlineBussiness" class="hideTmp offline-bussiness-map custom-url-box">
+                    <p class="hint">Choose company's location from the list or click on a marker.</p>                   
+                    <div class="row">
                         <div class="col-sm-12">
                            <input id="place_search" type="text" name="location[address]" class="form-control gllpSearchField" placeholder="Enter a location">
                         </div>
                     </div>
                    <br/>
-                   <div id="map" class="col-sm-12" style="min-height:600px;"></div>					
-				</div>
-				<div class="online-bussiness-url 
-				-url-box">
-				<div class="col-sm-6">
-				    <div class="form-group row">
-					  <label for="exampleInputUrl1">Site URL</label>
-					  <input type="url" name="bussiness-type-url" class="form-control" id="exampleInputUrl1" placeholder="Please enter your site url">
-					</div>
-				</div>	
-				</div>
-
+                   <div id="map" class="col-sm-12" style="min-height:600px;"></div>                 
+                </div>
 			</div>
 			<div class="col-md-12">
                 <input type="hidden" id="glat" name="location[lat]" value="" />
@@ -44,13 +42,12 @@
 	</div>
 </form>
 <script type="text/javascript">
-jQuery(document).ready(function(){	
-	jQuery('input').on('ifChecked', function(event){
-		var inputValue = jQuery(this).attr("value");
-		var targetBox = jQuery("." + inputValue);
-		jQuery(".custom-url-box").not(targetBox).hide();
-		jQuery(targetBox).show();
-	});	
+jQuery(document).ready(function(){
+    jQuery('.displayToggle').on('click', function(event){
+        var targetBox = jQuery(this).attr("data-target");
+        jQuery(".hideTmp").hide();
+        jQuery("#"+targetBox).toggle();
+    });
 	gmapM();
 });
 

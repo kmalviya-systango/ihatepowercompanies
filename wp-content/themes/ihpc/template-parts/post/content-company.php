@@ -45,7 +45,7 @@
     <?php endif; ?>
         <div class="separatore clearfix"></div>
         <?php if( !empty($company['i_didnot_like']) ): ?>
-        <h3 class="customer_list_title"><img src="<?php echo get_template_directory_uri(); ?>/assets/images/unlike.png"> Customers like </h3>
+        <h3 class="customer_list_title"><img src="<?php echo get_template_directory_uri(); ?>/assets/images/unlike.png"> Customers don't like </h3>
         <p class="pl-30">
             <?php
             $count = 0; 

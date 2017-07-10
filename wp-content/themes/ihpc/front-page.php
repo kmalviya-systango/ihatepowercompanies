@@ -68,63 +68,72 @@ get_header(); ?>
 					<h1>Most hated power companies</h1>
 				</div>
 				<div class="row">
-					<?php
-					//Getting posts of this week: Start
-					$currentWeek = get_companies_by_date(3,1);					
-					if( !empty($currentWeek) ): ?>
-						<div class='col-md-4 user-list'>
-							<h4>Now</h4>
-							<ul>
-								<?php 
-								foreach ($currentWeek as $key => $value) {
-									echo '<li>
-											<a href="'.$value['url'].'">'.$value['title'].'</a> 
-											<span class="user-number">'.$value['nu_user_ratted'].'</span>
-										</li>';
-								} 
-								?>
-							</ul>
-						</div>
-					<?php endif; ?>
-
-					<?php
-					//Getting posts of last week: Start
-					$lastWeek = get_companies_by_date(3,2);					
-					if( !empty($lastWeek) ): ?>
-						<div class='col-md-4 user-list'>
-							<h4>LAST WEEK</h4>
-							<ul>
-								<?php 
-								foreach ($lastWeek as $key => $value) {
-									echo '<li>
-											<a href="'.$value['url'].'">'.$value['title'].'</a> 
-											<span class="user-number">'.$value['nu_user_ratted'].'</span>
-										</li>';
-								} 
-								?>
-							</ul>
-						</div>
-					<?php endif; ?>
-
-					<?php
-					//Getting posts of last month: Start
-					$lastmonth = get_companies_by_date(3,3);					
-					if( !empty($lastmonth) ): ?>
-						<div class='col-md-4 user-list'>
-							<h4>LAST MONTH</h4>
-							<ul>
-								<?php 
-								foreach ($lastmonth as $key => $value) {
-									echo '<li>
-											<a href="'.$value['url'].'">'.$value['title'].'</a> 
-											<span class="user-number">'.$value['nu_user_ratted'].'</span>
-										</li>';
-								} 
-								?>
-							</ul>
-						</div>
-					<?php endif; ?>
-
+					<div class='col-md-4 user-list'>
+						<h4>Now</h4>
+						<?php
+						//Getting posts of this week: Start
+						$currentWeek = get_companies_by_date(3,1);
+						if( !empty($currentWeek) ): ?>						
+								<ul>
+									<?php 
+									foreach ($currentWeek as $key => $value) {
+										echo '<li>
+												<a href="'.$value['url'].'">'.$value['title'].'</a> 
+												<span class="user-number">'.$value['nu_user_ratted'].'</span>
+											</li>';
+									} 
+									?>
+								</ul>						
+						<?php
+							else:
+								echo "<small>There is no data to display, please check out later.</small>";
+						endif; 						
+						?>
+					</div>
+					<div class='col-md-4 user-list'>
+						<h4>LAST WEEK</h4>
+						<?php
+						//Getting posts of last week: Start
+						$lastWeek = get_companies_by_date(3,2);					
+						if( !empty($lastWeek) ): ?>						
+								<ul>
+									<?php 
+									foreach ($lastWeek as $key => $value) {
+										echo '<li>
+												<a href="'.$value['url'].'">'.$value['title'].'</a> 
+												<span class="user-number">'.$value['nu_user_ratted'].'</span>
+											</li>';
+									} 
+									?>
+								</ul>							
+						<?php 
+							else:
+								echo "<small>There is no data to display, please check out later.</small>";
+							endif;
+						?>
+					</div>
+					<div class='col-md-4 user-list'>
+						<h4>LAST MONTH</h4>
+						<?php
+						//Getting posts of last month: Start
+						$lastmonth = get_companies_by_date(3,3);					
+						if( !empty($lastmonth) ): ?>						
+								<ul>
+									<?php 
+									foreach ($lastmonth as $key => $value) {
+										echo '<li>
+												<a href="'.$value['url'].'">'.$value['title'].'</a> 
+												<span class="user-number">'.$value['nu_user_ratted'].'</span>
+											</li>';
+									} 
+									?>
+								</ul>						
+						<?php 
+							else:
+								echo "<small>There is no data to display, please check out later.</small>";
+							endif; 
+						?>
+					</div>
 				</div>
 				<div class="col-sm-12 clearfix text-right"><a href="<?php echo site_url('companies') ?>" class="more-link">More Trends <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/aero.png"> </a></div>
 			</div>
@@ -147,10 +156,7 @@ get_header(); ?>
 					$companies = get_companies_by_ratings(-1,'DESC');
 					foreach ($companies as $key => $company) {						
 						if( $company['ihpc_ratings'] > 4){
-							echo '<li>
-								<a href="'.$company['url'].'">'.$company['title'].'</a> 
-								<span class="user-number">'.$company['ihpc_ratings'].' stars</span>
-								</li>';
+							echo '<li><a href="'.$company['url'].'">'.$company['title'].'</a>'.show_stars($company['ihpc_ratings']).'</li>';
 						}
 					}
 				?>

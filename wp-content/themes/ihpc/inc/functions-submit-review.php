@@ -37,8 +37,13 @@ function submit_reivew_form(){
 			$company_arg2['post_title'] 	= $insertArray['company'];
 			$company_arg2['post_status'] 	= 'pending';
 		    $company_arg2['post_type'] 		= 'companies';
-		    $company_arg2['post_category'] 	= array( $data['company_category'] );
-			$company_id = wp_insert_post($company_arg2);			
+		    //$company_arg2['post_category'] 	= array( $data['company_category'] );
+		    // An array of IDs of categories we want this post to have.
+			$cat_ids = array( $data['company_category'] );
+			$cat_ids = array_map( 'intval', $cat_ids );
+			$cat_ids = array_unique( $cat_ids );		    
+			$company_id = wp_insert_post($company_arg2);
+			$term_taxonomy_ids = wp_set_object_terms( $company_id, $cat_ids, 'companiestax' );			
 		}
 		if(!empty($company_id)){
 			update_post_meta( $review_inserted_id, 'REVIEW_COMPANYID', $company_id);
@@ -53,6 +58,7 @@ function submit_reivew_form(){
 				if( !empty($attach_id) ){
 					if( substr($key, 0,9) == 'add_photo' ){
 						$photos .= wp_get_attachment_url( $attach_id )."\n";
+						set_post_thumbnail( $review_inserted_id, $attach_id );
 					}
 					if( substr($key, 0,9) == 'add_video' ){
 						$videos .= wp_get_attachment_url( $attach_id )."\n";
@@ -135,16 +141,19 @@ function review_location_form_callback(){
 	$reviewId = $_REQUEST['reviewId'];	
 	if( !empty($data['business-type']) ){
 		$business_type 	= $data['business-type'];
+		//update_field('_bussiness_type', $business_type, $reviewId);
 		update_post_meta($reviewId,'_bussiness_type',$business_type);
 	}
 	if( !empty($data['bussiness-type-url']) ){
 		$business_type_url 	= $data['bussiness-type-url'];
 		update_post_meta($reviewId,'_company_website',$business_type_url);
+		//update_field('_bussiness_type', 'online-bussiness', $reviewId);
 	}
 	if( !empty($data['location']) ){
 		$value = $data['location'];
 		$loc = serialize($value);
-		update_field('_review_location', $value, $reviewId);
+		//update_field('_bussiness_type', 'offline-bussiness', $reviewId);
+		//update_field('_review_location', $value, $reviewId);
 		//$location 	= json_encode($data['location']);
 		update_post_meta($reviewId,'_review_location',$loc);
 	}

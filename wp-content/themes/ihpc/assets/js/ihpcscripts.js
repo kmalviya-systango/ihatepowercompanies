@@ -73,8 +73,10 @@ jQuery( document ).ready(function() {
         jQuery(this).toggleClass("open");
         jQuery(element).slideToggle('500','linear');
     });
+
     //For companies page ajax call by letters
     jQuery(".company_by_letter").on("click",function(){
+        jQuery("#ajax_loader").show();
         jQuery.ajax({
             url: ihcpvars.ihcp_ajax_url,
             data: {
@@ -85,8 +87,18 @@ jQuery( document ).ready(function() {
             method: 'post',
             success: function(result){
                 jQuery("#main").html(result);
+                jQuery("#ajax_loader").hide();
             }
         });
+    });
+
+    //Display rattings
+    jQuery(".showRatting").barrating({
+        theme: 'fontawesome-stars-o',
+        showSelectedRating: true,
+        readonly: true,
+        allowEmpty: true,
+        emptyValue: 0
     });
 
 });
@@ -136,7 +148,7 @@ jQuery(window).load(function(){
 	
 	
 /* Define star*/
-var currentRating = jQuery('.star-rating').data('current-rating');
+/*var currentRating = jQuery('.star-rating').data('current-rating');
 
 jQuery('.stars-example-fontawesome-o .current-rating')
     .find('span')
@@ -147,12 +159,11 @@ jQuery('.stars-example-fontawesome-o .clear-rating').on('click', function(event)
 
     jQuery('.star-rating')
         .barrating('clear');
-});
+});*/
 
 jQuery('.star-rating').barrating({
     theme: 'fontawesome-stars-o',
     showSelectedRating: false,
-    initialRating: currentRating,
     onSelect: function(value, text) {
         if (!value) {
             jQuery('.star-rating')

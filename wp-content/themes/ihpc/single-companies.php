@@ -36,7 +36,7 @@ get_header(); ?>
 						    </div>
 						    <div class="col-md-9">
 								<?php the_title( '<h2 class="entry-title">', '</h2>' ); ?>
-								<span><?php echo $company['calculations']['star_ratting'] ?></span>
+								<span><?php echo show_stars($company['calculations']['star_ratting']) ?></span>
 								<a href="#">Add to comparison</a>
 							</div>
 						</div>
@@ -64,16 +64,16 @@ get_header(); ?>
 							echo "<div class='col-md-3'>";
 								echo "<ul>";
 								echo "<li><b>Rating Details</b></li>";
-								echo "<li>Location ".$company['calculations']['average_location_ratting']."</li>";
-								echo "<li>Diversity of Products or Services ".$company['calculations']['average_diversity_product_ratting']."</li>";
+								echo "<li>Location ".show_stars($company['calculations']['average_location_ratting'])."</li>";
+								echo "<li>Diversity of Products or Services ".show_stars($company['calculations']['average_diversity_product_ratting'])."</li>";
 								echo "<li>Product or Service Quality </li>";
-								echo "<li>Advertised vs Delivered ".$company['calculations']['average_advertised_ratting']."</li>";
-								echo "<li>Website ".$company['calculations']['average_website_ratting']."</li>";
-								echo "<li>Staff ".$company['calculations']['average_staff_ratting']."</li>";
-								echo "<li>Price Affordability ".$company['calculations']['average_price_affordability_ratting']."</li>";
-								echo "<li>Value for money ".$company['calculations']['average_value_for_money_ratting']."</li>";
+								echo "<li>Advertised vs Delivered ".show_stars($company['calculations']['average_advertised_ratting'])."</li>";
+								echo "<li>Website ".show_stars($company['calculations']['average_website_ratting'])."</li>";
+								echo "<li>Staff ".show_stars($company['calculations']['average_staff_ratting'])."</li>";
+								echo "<li>Price Affordability ".show_stars($company['calculations']['average_price_affordability_ratting'])."</li>";
+								echo "<li>Value for money ".show_stars($company['calculations']['average_value_for_money_ratting'])."</li>";
 								echo "<li>Customer service </li>";
-								echo "<li>Exchange, Refund and Cancellation Policy ".$company['calculations']['average_exchange_refund_ratting']."</li>";
+								echo "<li>Exchange, Refund and Cancellation Policy ".show_stars($company['calculations']['average_exchange_refund_ratting'])."</li>";
 								echo "</ul>";
 							echo "</div>";
 							if( !empty($company['i_didnot_like']) ){
@@ -201,13 +201,15 @@ get_header(); ?>
 								$j = 0;
 								foreach ($reviews as $i => $review) {
 									if( !empty($review['location']) ){
-										echo "<div><a href='#'>".$review['location']['address']."</a></div>";
-										//Generating json for map: Start
-										$com_locations[$j][] = $review['location']['address'];
-										$com_locations[$j][] = (float)$review['location']['lat'];
-										$com_locations[$j][] = (float)$review['location']['lng'];
-										$com_locations[$j][] = $i;
-										$j++;
+										if( is_array($review['location']) ){
+											echo "<div><a href='#'>".$review['location']['address']."</a></div>";
+											//Generating json for map: Start
+											$com_locations[$j][] = $review['location']['address'];
+											$com_locations[$j][] = (float)$review['location']['lat'];
+											$com_locations[$j][] = (float)$review['location']['lng'];
+											$com_locations[$j][] = $i;
+											$j++;
+										}										
 										//END;			
 									}
 								}

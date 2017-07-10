@@ -28,6 +28,15 @@ if( !empty($_REQUEST['location']['address']) ){
 }
 
 /***
+* If filter by tag
+***/
+if( !empty($_REQUEST['tag']) ){
+	$tag = esc_attr($_REQUEST['tag']);
+	$search_args = array( 'post_type' => 'review', 'tag' => $tag );
+	$GLOBALS['wp_query'] = new WP_Query( $search_args );
+}
+
+/***
 * If filter by comment count
 ***/
 if( !empty($_REQUEST['recently']) ){
@@ -36,12 +45,18 @@ if( !empty($_REQUEST['recently']) ){
 }
 
 /***
-* If filter by tag
+* If filter by comment count
 ***/
-if( !empty($_REQUEST['tag']) ){
-	$tag = esc_attr($_REQUEST['tag']);
-	$search_args = array( 'post_type' => 'review', 'tag' => $tag );
-	$GLOBALS['wp_query'] = new WP_Query( $search_args );
+if( !empty($_REQUEST['media']) ){
+	$postsWithImages = get_post_by_location('','uploaded_photos');
+	$search_args = 	array('post_type' => 'review');
+	if( $postsWithImages == 'No result found' ){
+		$search_args['author_name'] = $postsWithImages;
+	}
+	else{
+		$search_args['post__in'] = $postsWithImages;
+	}
+	$GLOBALS['wp_query'] = new WP_Query( $search_args );	
 }
 ?>
 
@@ -60,7 +75,7 @@ if( !empty($_REQUEST['tag']) ){
 						<li><a data-toggle="modal" data-target="#choose-category"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/categories.png">Category</a></li>
 						<li><a data-toggle="modal" data-target="#choose-tag"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Tag</a></li>
 						<li><a href="<?php echo get_current_url() ?>?recently=1"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Recently discussed</a></li>
-						<li><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">With media</li>
+						<li><a href="<?php echo get_current_url() ?>?media=1"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">With media</a></li>
 					</ul>
                 </div>
 			</form>
