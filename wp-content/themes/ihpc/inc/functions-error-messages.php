@@ -39,6 +39,9 @@ function ihpc_errors_display(){
 			case 4:
 				$smsg = "Password is incorrect"; 
 			break;
+			case 'str':
+				$smsg = $_GET['str']; 
+			break;
 			case 'existing_user_login':
 				$smsg = "Sorry, that company name or email already exists!"; 
 			break;

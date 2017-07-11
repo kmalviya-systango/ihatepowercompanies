@@ -61,8 +61,8 @@
     <div class="col-sm-2">
         <?php
         if( !empty($company['calculations']['star_ratting']) ): ?>
-            <h3 class="text-center rating_title "><?php echo round($company['calculations']['star_ratting'],2) ?></h3>
-            <div class="rating_bulb"><img src="<?php echo get_template_directory_uri(); ?>/assets/images/rating_bulb.png"></div>
+            <h3 class="text-center rating_title "><?php echo show_stars($company['calculations']['star_ratting']) ?></h3>
+            <!-- <div class="rating_bulb"><img src="<?php //echo get_template_directory_uri(); ?>/assets/images/rating_bulb.png"></div> -->
         <?php
         endif;
         ?>        

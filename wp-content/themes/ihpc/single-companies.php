@@ -22,6 +22,9 @@ get_header(); ?>
 						<?php 
 							$companyId = get_the_ID();
 							$company = get_company_review( $companyId );
+							/*echo "<pre>";
+							print_r($company);
+							echo "</pre>";*/
 						?>
 						<!-- Thumbnail and title section: start -->
 						<div class="row">
@@ -77,8 +80,9 @@ get_header(); ?>
 								echo "</ul>";
 							echo "</div>";
 							if( !empty($company['i_didnot_like']) ){
-								echo "<div class='col-md-3'><ul>
-									<li><b>Customers don't like</b></li>";
+								echo "<div class='col-md-3'>
+									<h3 class='customer_list_title'><img src='".get_template_directory_uri()."/assets/images/unlike.png' > Customers don't like </h3>
+									<ul>";
 									$dislikes = $company['i_didnot_like'];
 									foreach ($dislikes as $like => $like_count) {
 										echo "<li>$like <span>$like_count</span></li>";
@@ -86,8 +90,9 @@ get_header(); ?>
 								echo "</ul></div>";
 							}
 							if( !empty($company['i_like']) ){
-								echo "<div class='col-md-3'><ul>
-									<li><b>Customers like</b></li>";
+								echo "<div class='col-md-3'>
+									<h3 class='customer_list_title'><img src='".get_template_directory_uri()."/assets/images/like.png' > Customers like </h3>
+									<ul>";
 									$likes = $company['i_like'];
 									foreach ($likes as $like => $like_count) {
 										echo "<li>$like <span>$like_count</span></li>";
@@ -118,7 +123,7 @@ get_header(); ?>
 					</ul>
 					<div class="tab-content">
 						<div id="reviews" class="tab-pane fade in active">
-							<h3>Reviews</h3>
+							<h3>Reviews for <?php echo get_the_title() ?></h3>
 							<?php
 							if( !empty($company['reviews']) ){
 								$reviews = $company['reviews'];
@@ -164,8 +169,8 @@ get_header(); ?>
 							?>
 						</div>
 						<div id="qa" class="tab-pane fade">
-							<h3>Menu 1</h3>
-							<p>Some content in menu 1.</p>
+							<h3>QA for <?php echo get_the_title() ?></h3>
+							<p>No Content yet</p>
 						</div>
 						<div id="contacts" class="tab-pane fade">
 							<h3>Contact <?php echo get_the_title() ?></h3>
@@ -185,12 +190,43 @@ get_header(); ?>
 							<?php the_content(); ?>
 						</div>
 						<div id="stats" class="tab-pane fade">
-							<h3>Menu 4</h3>
-							<p>Some content in menu 2.</p>
+							<h3><?php echo get_the_title() ?> Stats</h3>
+							<p>No content yet</p>
 						</div>
 						<div id="competitors" class="tab-pane fade">
-							<h3>Menu 5</h3>
-							<p>Some content in menu 2.</p>
+							<h3>Compare <?php echo get_the_title() ?> to</h3>
+							<?php
+								if( !empty($company['company_terms']) ){
+									$terms 		= $company['company_terms'];
+									$termsIds 	= array();									
+									foreach ($terms as $i => $obj) {
+										$termsIds 	= $obj->term_id;										
+									}
+									$competitors = get_post_by_taxonomy('companies','companiestax',$termsIds);
+									if( !empty($competitors) ){
+										foreach ($competitors as $i => $competitor) {
+											echo "<div class='col-xs-12 col-sm-6 col-md-4'>													
+													<a href='".$competitor['permalink']."'>
+														<div class='thumbnail'>
+															<div class='thumbnail-image'>
+																<img src='".$competitor['img']."' class='alignnone size-full wp-image-144' />
+															</div>
+															<div class='caption dis-cap'>
+																<div>".$competitor['title']."</div>
+															</div>
+															<div class='button-bottom'>
+																<a href='#' class='btn read_more' role='button'>Compare</a>
+															</div>
+														</div>
+													</a>
+												</div>";
+										}
+									}
+									else{
+										echo "<div class='col-md-3'>No competitor companies</div>";
+									}									
+								}
+							?>
 						</div>
 						<div id="locations" class="tab-pane fade">
 							<h3>Where reviews came from</h3>
@@ -219,8 +255,8 @@ get_header(); ?>
 							<div style="height:480px" id="map"></div>
 						</div>
 						<div id="products" class="tab-pane fade">
-							<h3>Menu 7</h3>
-							<p>Some content in menu 2.</p>
+							<h3>Products</h3>
+							<p>No content yet</p>
 						</div>
 					</div>
 					<!-- Tabs panel end -->

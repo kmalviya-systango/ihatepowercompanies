@@ -75,7 +75,7 @@
               <li class="radio-item">
                 <input class="radio-btns vertical unhappy"  id="ComplaintForm_pissedReasonTemp_10" value="Other issue" type="radio" name="ComplaintForm[pissedReasonTemp]">
                 <label for="ComplaintForm_pissedReasonTemp_10">Other issue</label>
-                <input type="text" class="form-control _other-issue mt-10" value="" id="other-issue-first" />
+                <input type="text" class="form-control _other-issue mt-10" name="ComplaintForm[otherPissedReasonTemp]" value="" id="other-issue-first" />
               </li>
             </ul>
           </div>
@@ -170,17 +170,21 @@ jQuery(document).ready(function(){
             },
 			
            'ComplaintForm[personal_email]':  {
-			  required: true,
-			  email: true
-			},
-            'ComplaintForm[personal_phone]': {             
-			 required: true
+      			  required: true,
+      			  email: true
+      			},
+            'ComplaintForm[personal_phone]': {
+              required: true
+            },
+            'ComplaintForm[monetary_value]': {
+              number: true
             }
         },
         messages: {
             'ComplaintForm[full_name]': "Enter your Full Name",
             'ComplaintForm[personal_email]': "Enter your Personal Email",	
-            'ComplaintForm[personal_phone]': "Enter your Personal Phone"						
+            'ComplaintForm[personal_phone]': "Enter your Personal Phone",
+            'ComplaintForm[monetary_value]' : "Value of your loss must be a number."
            },
 		    onfocusout: function (element, event) {
             if (element.name !== "review_title") {

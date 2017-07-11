@@ -12,7 +12,7 @@
 				<label for="offline-business"><input name="business-type" data-target="offlineBussiness" value="offline-bussiness" checked="checked" class="displayToggle" type="radio"> Offline business</label>
 				<label for="offline-business" class="ml-10"><input name="business-type" data-target="onlineBussiness" value="online-bussiness" class="displayToggle" type="radio"> Online business</label>
 				<div class="clearfix"></div>				
-				<div id="onlineBussiness" style="display:none" class="hideTmp online-bussiness-url-url-box">
+				<div id="onlineBussiness" style="display:none" class="hideTmp online-bussiness custom-url-box">
     				<div class="col-sm-6">
     				    <div class="form-group row">
     					  <label for="exampleInputUrl1">Site URL</label>
@@ -20,7 +20,7 @@
     					</div>
     				</div>	
 				</div>
-                <div id="offlineBussiness" class="hideTmp offline-bussiness-map custom-url-box">
+                <div id="offlineBussiness" class="hideTmp offline-bussiness custom-url-box">
                     <p class="hint">Choose company's location from the list or click on a marker.</p>                   
                     <div class="row">
                         <div class="col-sm-12">
@@ -43,11 +43,12 @@
 </form>
 <script type="text/javascript">
 jQuery(document).ready(function(){
-    jQuery('.displayToggle').on('click', function(event){
-        var targetBox = jQuery(this).attr("data-target");
-        jQuery(".hideTmp").hide();
-        jQuery("#"+targetBox).toggle();
-    });
+    jQuery('input[type="radio"]').on('ifChecked', function(event){
+        var inputValue = jQuery(this).attr("value");
+        var targetBox = jQuery("." + inputValue);
+        jQuery(".custom-url-box").not(targetBox).hide();
+        jQuery(targetBox).show();
+    }); 
 	gmapM();
 });
 

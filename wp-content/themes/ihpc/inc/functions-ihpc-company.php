@@ -22,6 +22,7 @@ function get_company_review($company_id){
 			if( !empty($iLiked) ){
 				$iLiked = explode(",", $iLiked);
 				foreach ($iLiked as $key => $like) {
+					$like = strtolower($like);
 					if( !array_key_exists($like, $returnArray['i_like']) ){
 						$returnArray['i_like'][$like] = 1;
 					}
@@ -35,6 +36,7 @@ function get_company_review($company_id){
 			if( !empty($iUnLiked) ){
 				$iUnLiked = explode(",", $iUnLiked);
 				foreach ($iUnLiked as $key => $unLike) {
+					$unLike = strtolower($unLike);
 					if( !array_key_exists($unLike, $returnArray['i_didnot_like']) ){
 						$returnArray['i_didnot_like'][$unLike] = 1;
 					}
@@ -79,6 +81,8 @@ function get_company_review($company_id){
 		$returnArray['calculations']['average_loss'] = empty($average_loss) ? 0 : $average_loss;
 		$returnArray['calculations']['total_loss_metric'] 	 = ihpc_human_number($total_loss,0,'metric');
 		$returnArray['calculations']['average_loss_metric']  = ihpc_human_number($average_loss,0,'metric');
+		//Categories
+		$returnArray['company_terms'] = wp_get_post_terms( $company_id, 'companiestax' );
 		wp_reset_postdata();
 	}
 	return $returnArray;

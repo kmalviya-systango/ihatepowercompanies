@@ -72,9 +72,9 @@ jQuery( document ).ready(function() {
             }
         },
         messages: {
-            review_title: "Enter your Review Title",
-            review_text: "Enter your Review Text",
-            company: "Enter your Company Name",			
+            review_title: "Review Title is required",
+            review_text: "Review Text should be more than 100 words",
+            company: "Company Name is required",			
             company_category: "Enter your Last Name",						
            },
 		    onfocusout: function (element, event) {
@@ -82,7 +82,6 @@ jQuery( document ).ready(function() {
                 $.validator.defaults.onfocusout.call(this, element, event);
             }
         },
-		   		
         highlight: function(element) {
             $(element).closest('.form-group').addClass('has-error');
             $(element).closest('.form-group').removeClass('has-success');
@@ -130,7 +129,6 @@ jQuery(document).on('submit', '#step1', function(e){
     };
     fd.append("form_json", data);  
     fd.append('action', 'submit_reivew_form');
-
     jQuery.ajax({
         type: 'POST',
         url: "<?php echo admin_url('admin-ajax.php'); ?>",

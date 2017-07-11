@@ -769,6 +769,16 @@ function customize_wp_bootstrap_pagination($args) {
 }
 add_filter('wp_bootstrap_pagination_defaults', 'customize_wp_bootstrap_pagination');
 
+//If session is not started, then start a session because init is not working
+if(!session_id()) {
+	session_start();
+}
+add_action('wp_logout', 'ihpc_end_session');
+add_action('wp_login', 'ihpc_end_session');
+function ihpc_end_session() {
+    session_destroy ();
+}
+
 /***
 * After logout redirect user to home page.
 ****/
@@ -1406,7 +1416,7 @@ add_filter( 'login_headertitle', 'ihpc_login_logo_url_title' );
 /****
 * Sign up to IHPC
 ****/
-function register_user_callback(){
+function register_user_callback(){	
 	//Userdata is an array to create a new user
 	$userdata = array();
 	$userdata['user_login'] = esc_attr( $_POST['user_name'] );
@@ -1421,7 +1431,7 @@ function register_user_callback(){
 	$user_id = wp_insert_user( $userdata );				
 	if ( !is_wp_error( $user_id ) ) {
 		//Sending email to signup user: Start
-		$to = $userdata['user_email'];
+		$to 	 = $userdata['user_email'];
 		$subject = 'Welcome to IHPC';
 		$message = "Hello $userdata[user_login],\nYou have successfully registered to IHPC and your credentials are
 					\n<b>UserName: </b>$userdata[user_login]
@@ -1429,10 +1439,10 @@ function register_user_callback(){
 					\n<b>Passoword: </b>$userdata[user_pass]";
 		$headers = 'Content/type:text/html';
 		wp_mail($to,$subject,$message,$headers);
-		//END;
+		//END;		
 		//If review id is set in then assign it with this user
-		if( !empty($_POST['review_id']) ){
-			$reviewId = $_POST['review_id'];
+		if( !empty($_SESSION['unauthor_reviewId']) ){
+			$reviewId  = $_SESSION['unauthor_reviewId'];
 			wp_update_post( array('ID' => $reviewId,'post_author' => $user_id) );
 			$signOnRes = wp_signon( $credentials,false);
 			if(!empty($signOnRes->ID)){
@@ -1446,8 +1456,10 @@ function register_user_callback(){
 		}
 	}
 	else{
+		$error_string = $result->get_error_message();
+   		//echo '<div id="message" class="error"><p>' . $error_string . '</p></div>';
 		$redirectUrl = site_url('sign-up');
-		header("Location:$redirectUrl?success=false&msg=1");
+		header("Location:$redirectUrl?success=false&msg=str&str=$error_string");
 	}
 	/*$userdata['user_login'] = $_POST['user_cpassword'];
 	$userdata['user_login'] = $_POST['user_phonenumber'];
@@ -1701,4 +1713,46 @@ function show_stars($ratings){
 				<option value="5">5</option>
 			</select><span>'.$ratings.'</span>';
 	}	
+}
+
+function get_post_by_taxonomy($post_type='companies',$taxonomy='companiestax',$terms=array() ){
+	$search_args = 	array('post_type' => $post_type,
+						  'tax_query' => array( 
+							 				array('taxonomy'=>$taxonomy,
+												'field' =>'id',
+												'terms' => $terms,
+												'operator'=>'IN'
+											)
+										)
+						);	
+	$the_query 	= new WP_Query( $search_args );
+	$array 		= array();
+	$i = 0;
+	// The Loop
+	if ( $the_query->have_posts() ) {
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			$post_id = get_the_ID();
+			$array[$i]['id'] 		= get_the_ID();
+			$array[$i]['title'] 	= get_the_title();
+			//$array[$i]['excerpt'] 	= get_the_excerpt();
+			//$array[$i]['content'] 	= get_the_content();
+			$array[$i]['permalink'] = get_permalink();
+			$array[$i]['date'] 		= get_the_date();
+			$array[$i]['img'] = get_the_post_thumbnail_url(get_the_ID(),'medium');
+			/*$tags = get_the_terms( $post_id, 'post_tag');
+			if( !empty($tags)	){
+				foreach ($tags as $key => $tag) {
+					$array[$i]['terms'][] = $tag;
+				}
+			}*/
+			$i++;
+		}
+		/* Restore original Post Data */
+		wp_reset_postdata();
+		return $array;
+	} 
+	else {
+		return $array;
+	}
 }

@@ -24,7 +24,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div>
+                  <!-- <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div> -->
               </div>
             </li>
             <li class="star-rating-row clearfix">
@@ -39,7 +39,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div>
+                  <!-- <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div> -->
               </div>
             </li>
             <li class="star-rating-row clearfix">
@@ -54,7 +54,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div>
+                  <!-- <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div> -->
               </div>
             </li>
             <div class="clearfix"></div>
@@ -70,7 +70,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div>
+                  <!-- <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div> -->
               </div>
             </li>           
             <li class="star-rating-row clearfix">
@@ -85,7 +85,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div>
+                  <!-- <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div> -->
               </div>
             </li>
             
@@ -105,7 +105,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div>
+                  <!-- <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div> -->
               </div>
             </li>
             <li class="star-rating-row clearfix">
@@ -120,7 +120,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div>
+                  <!-- <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div> -->
               </div>
             </li>
             <li class="star-rating-row clearfix">
@@ -135,7 +135,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div>
+                  <!-- <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div> -->
               </div>
             </li>
             <li class="star-rating-row clearfix">
@@ -150,7 +150,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div>
+                  <!-- <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div> -->
               </div>
             </li>            
             <li class="star-rating-row clearfix">
@@ -165,7 +165,7 @@
                     <option value="4">4</option>
                     <option value="5">5</option>
                   </select>
-                  <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div>
+                  <!-- <span class="title current-rating"> Current rating: <span class="value"></span> </span> <span class="title your-rating hidden"> Your rating: <span class="value"></span>&nbsp; <a href="#" class="clear-rating"><i class="fa fa-times-circle"></i></a> </span> </div> -->
               </div>
             </li>            
           </ul>
