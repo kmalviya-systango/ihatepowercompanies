@@ -58,6 +58,7 @@ if( !empty($_REQUEST['media']) ){
 	}
 	$GLOBALS['wp_query'] = new WP_Query( $search_args );	
 }
+
 ?>
 
 <div class="col-lg-9">

@@ -34,7 +34,7 @@
 		            		if( !empty($location['location']) ){
 		            			$loc = $location['location'];
 		            			$url = get_current_url().'?location[address]='.$loc['address'].'&location[lat]='.$loc['lat'].'&location[lng]='.$loc['lng'];
-		            			echo "<a href='".$url."'>$loc[address]</a>";
+		            			echo "<a href='".$url."'>$loc[address]</a> <span class='spacer'>|</span> ";
 		            		}		            		
 		            	}
 		            }		            

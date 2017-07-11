@@ -55,7 +55,20 @@ jQuery( document ).ready(function() {
         });
     },'json');
 
-    jQuery(".reviewTags").tagsinput({
+    jQuery.get(ihcpvars.ihcp_ajax_url+"?action=search_review_tags", function(data){
+        jQuery(".reviewTags").typeahead({ 
+            source:data,
+            minLength:1,
+            fitToElement:1,
+            showHintOnFocus:"all",
+            afterSelect: function(item){
+                console.log(item);
+                //window.location.href = item.url;
+            }
+        });
+    },'json');
+
+    /*jQuery(".reviewTags").tagsinput({
         typeahead: {
             source: function(query) {
                 return jQuery.get(ihcpvars.ihcp_ajax_url+"?action=search_review_tags");
@@ -66,7 +79,7 @@ jQuery( document ).ready(function() {
                 // /console.log(item);                
             }
         }
-    });
+    });*/
 
     jQuery("#toggleElement").on("click",function(){
         var element = jQuery(this).attr("data-target");

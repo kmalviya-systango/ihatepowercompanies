@@ -1597,12 +1597,13 @@ function search_review_tags_callback() {
     				$array[$i]['id'] 	= $obj->term_id;
 					$array[$i]['name'] 	= $obj->name;
 					$array[$i]['count'] = $obj->count;
+					$array[$i]['url'] 	= get_tag_link($obj->term_id);
 					$i++;
         		}
     		}
     	}    	
     }    
-    echo json_encode($array);
+    echo json_encode( array_values($array) );
     exit();
 }
 

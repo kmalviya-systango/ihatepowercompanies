@@ -124,7 +124,7 @@ echo "</pre>";*/
 	            <div class="modal-body">                
 	                  <div class="form-group col-sm-6">
 	                    <label for="input1">Email <span class="required">*</span></label>
-	                      <input class="form-control" name="reg_company_email" id="input1" placeholder="" type="email">
+	                      <input class="form-control" required="required" name="reg_company_email" id="input1" placeholder="" type="email">
 	                  </div>
 	                  <div class="form-group col-sm-6">
 	                    <label for="input2">Phone</label>
@@ -132,7 +132,7 @@ echo "</pre>";*/
 	                  </div>
 	                  <div class="form-group col-sm-6">
 	                    <label for="input3">Your Full Name <span class="required">*</span></label>
-	                      <input class="form-control" name="reg_company_fullname" id="input3" placeholder="" type="text">
+	                      <input class="form-control" required="required" name="reg_company_fullname" id="input3" placeholder="" type="text">
 	                  </div>
 	                  <div class="form-group col-sm-6">
 	                    <label for="input4">Corporate Title</label>
@@ -140,7 +140,7 @@ echo "</pre>";*/
 	                  </div>
 	                  <div class="form-group col-sm-6">
 	                    <label for="input5">Company Name <span class="required">*</span></label>
-	                      <input class="form-control" name="reg_company_name" id="input5" placeholder="" type="text">
+	                      <input class="form-control" required="required" name="reg_company_name" id="input5" placeholder="" type="text">
 	                  </div>
 	                  <div class="clearfix"></div> 
 	            </div>            

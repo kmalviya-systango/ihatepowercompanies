@@ -11,7 +11,18 @@
 	        </div>
 	        <div class="modal-body row">
 	        	<div class="col-md-12">
-					<input type="text" class="form-control reviewTags" data-redirect="<?php echo get_current_url() ?>" value="" placeholder="">
+	        		<div class="search-box ">
+						<form action="" method="get" class="clearfix">
+							<div class="search-for-car clearfix">
+								<div class="inner-search">
+									<div class="">
+										<input type="text" class="form-control reviewTags" name="tag" placeholder="">
+									</div>
+								</div>
+								<input value="" class="btn-style inner-search-button" type="submit">
+							</div>							
+						</form>
+					</div>					
 					<p class="hint mt-10 bootstrap-tagsinput-ex">
 						<?php 
 			            $terms = ihpc_get_post('review',-1);			            
