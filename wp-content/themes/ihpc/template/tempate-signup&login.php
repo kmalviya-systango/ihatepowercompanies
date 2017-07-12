@@ -4,7 +4,17 @@ ob_start();
 * Template Name: Signup & login Page
 **/
 get_header('fullwidth');
+
+if( is_user_logged_in() ){
+	wp_redirect(home_url());
+}
+
 $reviewId = empty($_GET['reviewId'])?'':$_GET['reviewId'];
+
+//Storing the review id in session so that we can assign it author after signup or login
+//ihpc_start_session();
+$_SESSION['unauthor_reviewId'] = $reviewId;
+//END;
 //Generating an image for captcha
 if (class_exists('ReallySimpleCaptcha')) { 
 	$captcha 		= new ReallySimpleCaptcha();
@@ -42,7 +52,6 @@ if (class_exists('ReallySimpleCaptcha')) {
 			header("Location:$redirectUrl?success=false&msg=2");
 		}
 	}
-
 }
 ?>
 <?php ihpc_errors_display() ?>
