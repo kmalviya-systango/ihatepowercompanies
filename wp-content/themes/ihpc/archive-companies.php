@@ -92,9 +92,16 @@ echo "</pre>";*/
 			<?php
 			if ( have_posts() ) : ?>
 				<?php
+				$countblocks = 0;
 				/* Start the Loop */
 				while ( have_posts() ) : the_post();
+					$countblocks++;
 					get_template_part( 'template-parts/post/content', 'company' );
+					if( ($countblocks%2) == 0){
+						if (function_exists ('adinserter')){
+							echo adinserter (5);	
+						} 
+					}					
 				endwhile;
 			else :
 			get_template_part( 'template-parts/post/content', 'none' );

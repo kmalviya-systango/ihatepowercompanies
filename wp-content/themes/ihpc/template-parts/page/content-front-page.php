@@ -29,7 +29,8 @@
 	<?php endif; ?>
 
 	<div class="panel-content">
-		<div class="wrap">
+		<?php if (function_exists ('adinserter')) echo adinserter (6); ?>
+		<div class="wrap">			
 			<header class="entry-header">
 				<h1>Featured Reviews</h1>
 			</header><!-- .entry-header -->

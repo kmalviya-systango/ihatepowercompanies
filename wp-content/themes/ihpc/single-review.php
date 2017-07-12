@@ -79,11 +79,7 @@ get_header(); ?>
 							<a href="<?php echo site_url('for-business') ?>">Contact author</a>
 						</div>
 					</article><!-- #post-## -->
-					<?php
-					if (function_exists ('adinserter')){
-						echo adinserter (3);
-					}
-					?>
+					<?php if (function_exists ('adinserter')) echo adinserter (4); ?>
 					<h2>
 						Had an Experience with <?php echo get_the_title() ?>? <a href="<?php echo site_url('submit-review') ?>">Write a review</a>
 					</h2>
@@ -94,6 +90,7 @@ get_header(); ?>
 					endif;					
 				endwhile; // End of the loop.
 			?>
+			<?php if (function_exists ('adinserter')) echo adinserter (4); ?>
 		</main><!-- #main -->
 	</div><!-- #primary -->	
 </div><!-- .wrap -->

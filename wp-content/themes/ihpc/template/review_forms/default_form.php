@@ -21,7 +21,7 @@
 					<input type="text" class="form-control reviewPageCompanies" data-redirect="no" autocomplete="off" name="company" placeholder="Company name." required>
 				</div>
 				<div class="form-group">
-					<label>Product or Service</label>
+					<label>Service</label>
 					<input type="text" class="form-control" name="product_or_service"  placeholder="Particular model ID, e.g. Bosch SHX43P15.">
 				</div>
 				<div id="newCompanyCategory" class="form-group">
