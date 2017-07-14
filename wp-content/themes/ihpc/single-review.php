@@ -14,29 +14,11 @@ get_header(); ?>
 
 <div class="wrap">
 	<div id="primary" class="content-area">
-		<main id="main" class="site-main" role="main">
-			<?php
-				/* Start the Loop */
-				while ( have_posts() ) : the_post(); ?>
-					<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-						<ul class="review-fields">
-							<?php 
-							$company_id = get_post_meta( get_the_ID(), 'REVIEW_COMPANYID', true );
-							if( !empty($company_id) ){
-							    $company_name   = get_the_title( $company_id );
-							    $company_url    = get_the_permalink( $company_id );
-							    echo '<li class="normal-size">
-							            <i class="fa fa-building-o" aria-hidden="true"></i>
-							            <a href="'.$company_url.'"><span itemprop="name">'.$company_name.'</span></a>
-							        </li>';
-							}
-							?>
-							<li><i class="fa fa-user" aria-hidden="true"></i><span class="fs12">by </span><span class="fs12"><?php echo get_the_author() ?></span></li>
-							<li><i class="fa fa-clock-o" aria-hidden="true"></i><span class="fs12"><?php echo get_the_date() ?></span></li>
-							<li><i class="fa fa-clock-o" aria-hidden="true"></i><span class="fs12"><?php comments_number( '0 Comment', '1 Comment', '% Comments' ); ?></span></li>							
-						</ul>
+		<main id="main" class="site-main single-review-page" role="main">
+		
+				<div class="clearfix"> </div>
 						<header class="entry-header">
-							<?php the_title( '<h2 class="entry-title">', '</h2>' ); ?>
+							<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
 						</header>
 						<?php if ( '' !== get_the_post_thumbnail() ) : ?>
 							<div class="post-thumbnail">
@@ -45,9 +27,32 @@ get_header(); ?>
 								</a>
 							</div><!-- .post-thumbnail -->
 						<?php endif; ?>
-						<div class="entry-content">
-							<div class="clearfix">
-								<div style="width:60%;float:left" class="content">
+			<?php
+				/* Start the Loop */
+				while ( have_posts() ) : the_post(); ?>
+					<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+				
+					
+						<div class="entry-content row">
+								<div class="col-sm-8">
+										<ul class="review-fields">
+											<?php 
+											$company_id = get_post_meta( get_the_ID(), 'REVIEW_COMPANYID', true );
+											if( !empty($company_id) ){
+												$company_name   = get_the_title( $company_id );
+												$company_url    = get_the_permalink( $company_id );
+												echo '<li class="normal-size">
+														<i class="fa fa-building-o" aria-hidden="true"></i>
+														<a href="'.$company_url.'"><span itemprop="name">'.$company_name.'</span></a>
+													</li>';
+											}
+											?>
+											<li><i class="fa fa-user" aria-hidden="true"></i><span class="fs12">by </span><span class="fs12"><?php echo get_the_author() ?></span></li>
+											<li><i class="fa fa-clock-o" aria-hidden="true"></i><span class="fs12"><?php echo get_the_date() ?></span></li>
+											<li class="pull-right"><i class="fa fa-comments-o" aria-hidden="true"></i><span class="fs12"><?php comments_number( '0 Comment', '1 Comment', '% Comments' ); ?></span></li>							
+										</ul>
+								
+								
 									<?php
 										/* translators: %s: Name of current post */
 										the_content( sprintf(
@@ -56,24 +61,24 @@ get_header(); ?>
 										) );			
 									?>
 								</div>
-								<div style="width:40%;float:right" class="rattings">
+								<div class="rattings col-sm-4">
 									<?php 
 									$rattings = get_review_meta( get_the_ID() );
 									if( !empty($rattings['rattings']) ){
 										$rates = $rattings['rattings'];
 										foreach ($rates as $meta_key => $meta_value) {
-											echo "<div><span>$meta_key </span>".show_stars($meta_value)."</div>";
+											echo "<div class='totle-review-sidebar clearfix'><div class='leftside-rating'>$meta_key </div>".show_stars($meta_value)."</div>";
 										}
 									}
 									if( !empty($rattings['losses']) ){
 										$losses = $rattings['losses'];
 										foreach ($losses as $meta_key => $meta_value) {
-											echo "<div><i>$meta_key </i><br/>$meta_value</div>";
+											echo "<div class='bottom-val clearfix'><span class='mkey'> $meta_key </span> <span class='mvalue'>$meta_value</span></div>";
 										}
 									}									
 									?>
 								</div>
-							</div>
+
 						</div><!-- .entry-content -->
 						<div>
 							<a href="<?php echo site_url('for-business') ?>">Contact author</a>

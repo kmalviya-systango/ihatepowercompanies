@@ -7,25 +7,21 @@
 	                     <span aria-hidden="true">×</span>
 	                     <span class="sr-only">Close</span>
 	              </button>
-	              <h4 class="modal-title">Companies</h4>
+	              <h4 class="modal-title"><span class="icon icon-review-company"></span> Companies</h4>
 	        </div>
 	        <div class="modal-body">	        	
-	        	<div class="row">
 	        		<?php echo get_company_search_box() ?>
 					<?php
 					$allcompanies = get_companies(-1);
 					if(!empty($allcompanies)){
 						foreach ($allcompanies as $key => $company) {
-							echo "<div class='col-md-6'>
-									<a href='".$company['url']."'>$company[title]</a><span>115</span>
-								</div>";
+							echo "<a class='tags_modal' href='".$company['url']."'>$company[title] 115 </a>";
 						}
 					}
 					else{
 						echo "<div class='col-md-12'>No Companies</div>";
 					}
 					?>
-				</div>
             </div>            
             <!-- Modal Footer -->
             <div class="modal-footer"></div> 

@@ -12,7 +12,9 @@ $categories = get_ihpc_categories('companiestax',0); ?>
 	                     <span aria-hidden="true">×</span>
 	                     <span class="sr-only">Close</span>
 	              </button>
-	              <h4 class="modal-title">Filter Companies by Category</h4>
+	              <h4 class="modal-title">
+				  <span class="icon icon-review-Category"></span>
+				  Filter Companies by Category</h4>
 	        </div>
 	        <div class="modal-body row">
 	        	<div class="col-md-12">

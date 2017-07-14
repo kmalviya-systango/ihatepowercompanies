@@ -69,15 +69,16 @@ if( !empty($_REQUEST['media']) ){
 		<div class="search-box ">
 			<form action="" method="post" class="clearfix">
 				<?php echo get_company_search_box() ?>
+				<a href="javascript:void(0)" id="_advanceSearch" class="pull-right as">Advanced Search</a>
 				<div class="parameters">
-                    <ul class="list-inline" style="display: block;">
-						<li><a data-toggle="modal" data-target="#choose-company"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Company</a></li>
-						<li><a data-toggle="modal" data-target="#choose-location"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Location</a></li>
-						<li><a data-toggle="modal" data-target="#choose-category"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/categories.png">Category</a></li>
-						<li><a data-toggle="modal" data-target="#choose-tag"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Tag</a></li>
-						<li><a href="<?php echo get_current_url() ?>?recently=1"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">Recently discussed</a></li>
-						<li><a href="<?php echo get_current_url() ?>?media=1"><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/locate_point.png">With media</a></li>
-					</ul>
+					<ul class="filter-parameters">
+					  <li><a data-toggle="modal" data-target="#choose-company"> <span class="icon icon-review-company"></span> <span class="icon-text">Company</span> </a></li>
+					  <li><a data-toggle="modal" data-target="#choose-location"> <span class="icon icon-review-location"></span> <span class="icon-text">Location</span></a></li>
+					  <li><a data-toggle="modal" data-target="#choose-category"> <span class="icon icon-review-Category"></span> <span class="icon-text">Category</span></a></li>
+					  <li><a data-toggle="modal" data-target="#choose-tag"> <span class="icon icon-review-tag"></span> <span class="icon-text">Tag</span></a></li>
+					  <li><a href="<?php echo get_current_url() ?>?recently=1"> <span class="icon icon-review-comment"></span> <span class="icon-text">Discussed</span> </a></li>
+					  <li><a href="<?php echo get_current_url() ?>?media=1"> <span class="icon icon-review-media"></span> <span class="icon-text">With media</span> </a></li>
+					</ul>               
                 </div>
 			</form>
 		</div>
@@ -120,5 +121,9 @@ include_once "inc/modals/location.php";
 include_once "inc/modals/companies.php";
 //Including the location modal
 include_once "inc/modals/tags.php";
-
 get_footer(); ?>
+<script type="text/javascript">
+$( "#_advanceSearch" ).click(function() {
+  $('.filter-parameters').slideToggle( "fast" );
+});
+</script>

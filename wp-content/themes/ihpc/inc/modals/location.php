@@ -7,7 +7,9 @@
 	                     <span aria-hidden="true">×</span>
 	                     <span class="sr-only">Close</span>
 	              </button>
-	              <h4 class="modal-title">Filter Companies by Location</h4>
+	              <h4 class="modal-title">
+				  <span class="icon icon-review-location"></span>
+				  Filter Companies by Location</h4>
 	        </div>
 	        <div class="modal-body row">
 	        	<div class="col-md-12">
